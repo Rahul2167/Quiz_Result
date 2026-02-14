@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: online-quiz
+    env: docker
+    plan: free
+    region: singapore # Optional: defaults to Oregon, but user might prefer Singapore based on timezone
+    envVars:
+      - key: DB_URL
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
