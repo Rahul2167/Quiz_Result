@@ -1,132 +1,133 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ page import="java.sql.*" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+    <%@ page import="java.sql.*" %>
 
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Leaderboard</title>
+        <!DOCTYPE html>
+        <html>
 
-<style>
-	
-    body {
-        background: linear-gradient(135deg,#141e30,#243b55);
-        font-family: Arial, sans-serif;
-        color: white;
-    }
+        <head>
+            <meta charset="UTF-8">
+            <title>Leaderboard</title>
 
-    h2 {
-        text-align: center;
-        margin-top: 30px;
-    }
+            <style>
+                body {
+                    background: linear-gradient(135deg, #141e30, #243b55);
+                    font-family: Arial, sans-serif;
+                    color: white;
+                    text-align: center;
+                }
 
-    table {
-        margin: 30px auto;
-        border-collapse: collapse;
-        width: 80%;
-        background: white;
-        color: black;
-        border-radius: 10px;
-        overflow: hidden;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-    }
+                h2 {
+                    text-align: center;
+                    margin-top: 30px;
+                }
 
-    th {
-        background: #243b55;
-        color: white;
-        padding: 12px;
-        text-align: center;
-    }
+                table {
+                    margin: 30px auto;
+                    border-collapse: collapse;
+                    width: 80%;
+                    background: white;
+                    color: black;
+                    border-radius: 10px;
+                    overflow: hidden;
+                    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+                }
 
-    td {
-        padding: 10px;
-        text-align: center;
-    }
+                th {
+                    background: #243b55;
+                    color: white;
+                    padding: 12px;
+                    text-align: center;
+                }
 
-    tr:nth-child(even) {
-        background: #f2f2f2;
-    }
+                td {
+                    padding: 10px;
+                    text-align: center;
+                }
 
-    tr:hover {
-        background: #dcdcdc;
-    }
+                tr:nth-child(even) {
+                    background: #f2f2f2;
+                }
 
-    .btn {
-        display: block;
-        margin: 20px auto;
-        padding: 12px 25px;
-        background: #ff4b5c;
-        color: black;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 16px;
-    }
+                tr:hover {
+                    background: #dcdcdc;
+                }
 
-    .btn:hover {
-        background: #ff2e44;
-        	transform: rotateX(360deg);
-        	transition:1s;
-        	background-color: rgb(255, 255, 0);
-     
-    }
-</style>
-</head>
+                .btn {
+                    display: block;
+                    margin: 20px auto;
+                    padding: 12px 25px;
+                    background: #ff4b5c;
+                    color: black;
+                    border: none;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    font-size: 16px;
+                }
 
-<body>
+                .btn:hover {
+                    background: #ff2e44;
+                    transition: 0.3s;
+                    transform: scale(1.05);
+                    color: white;
+                }
+            </style>
+        </head>
 
-<h2>🏆 Leaderboard</h2>
+        <body>
 
-<table>
-<tr>
-    <th>Rank</th>
-    <th>ID</th>
-    <th>Name</th>
-    <th>Score</th>
-    <th>Result</th>
-    <th>Date</th>
-</tr>
+            <h2>🏆 Leaderboard</h2>
 
-<%
-    int rank = 1;
+            <% String errorMsg=null; Connection con=null; Statement stmt=null; ResultSet rs=null; try { // Database
+                Connection (Dynamic for Render) String bucketUrl=System.getenv("DB_URL"); String
+                host=System.getenv("DB_HOST"); String dbName=System.getenv("DB_NAME"); String
+                user=System.getenv("DB_USER"); String password=System.getenv("DB_PASSWORD"); String url; if (host !=null
+                && dbName !=null) { // Render Managed DB url="jdbc:postgresql://" + host + ":5432/" + dbName; } else if
+                (bucketUrl !=null) { // Generic connection string url=bucketUrl; } else { // Fallback for local
+                url="jdbc:postgresql://localhost:5432/student" ; } if (user==null) user="postgres" ; if (password==null)
+                password="Rahul@2167" ; Class.forName("org.postgresql.Driver"); con=DriverManager.getConnection(url,
+                user, password); // Rank wise (highest score first) String
+                sql="SELECT * FROM quiz_result ORDER BY score DESC" ; stmt=con.createStatement();
+                rs=stmt.executeQuery(sql); } catch(Exception e) { errorMsg=e.getMessage(); e.printStackTrace(); } %>
 
-    try {
-        String url = "jdbc:postgresql://localhost:5432/student";
-        String user = "postgres";
-        String pwd = "Rahul@2167";
+                <% if (errorMsg !=null) { %>
+                    <div
+                        style="width: 80%; margin: 20px auto; background-color: #ffe6e6; color: red; padding: 15px; border-radius: 5px; text-align: left;">
+                        <strong>Error connecting to database:</strong><br>
+                        <%= errorMsg %>
+                    </div>
+                    <% } else { %>
+                        <table>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Name</th>
+                                <th>Score</th>
+                                <th>Result</th>
+                            </tr>
 
-        Class.forName("org.postgresql.Driver");
-        Connection con = DriverManager.getConnection(url, user, pwd);
+                            <% int rank=1; if (rs !=null) { while(rs.next()) { %>
+                                <tr>
+                                    <td>
+                                        <%= rank++ %>
+                                    </td>
+                                    <td>
+                                        <%= rs.getString("fullname") %>
+                                    </td>
+                                    <td>
+                                        <%= rs.getInt("score") %>
+                                    </td>
+                                    <td>
+                                        <%= rs.getString("result") %>
+                                    </td>
+                                </tr>
+                                <% } } %>
+                        </table>
+                        <% } // Close resources if(rs !=null) rs.close(); if(stmt !=null) stmt.close(); if(con !=null)
+                            con.close(); %>
 
-        // Rank wise (highest score first)
-        String sql = "SELECT * FROM quiz_result ORDER BY score DESC, quiz_date ASC";
-        Statement stmt = con.createStatement();
-        ResultSet rs = stmt.executeQuery(sql);
+                            <a href="index.html" style="text-decoration: none;">
+                                <button class="btn">⬅ Back To Quiz</button>
+                            </a>
 
-        while(rs.next()) {
-%>
-<tr>
-    <td><%= rank++ %></td>
-    <td><%= rs.getInt("id") %></td>
-    <td><%= rs.getString("fullname") %></td>
-    <td><%= rs.getInt("score") %></td>
-    <td><%= rs.getString("result") %></td>
-    <td><%= rs.getDate("quiz_date") %></td>
-</tr>
-<%
-        }
-        con.close();
-    } catch(Exception e) {
-        out.println(e);
-    }
-%>
+        </body>
 
-</table>
-
-<a href="index.html">
-    <button class="btn">⬅ Back To Quiz</button>
-</a>
-
-</body>
-</html>
+        </html>
