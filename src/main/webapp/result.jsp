@@ -68,13 +68,22 @@
                     ResultSet rs;
                     PreparedStatement psmt;
 
-                    String url = System.getenv("DB_URL");
-                    if (url == null) url = "jdbc:postgresql://localhost:5432/student";
-
+                    String bucketUrl = System.getenv("DB_URL");
+                    String host = System.getenv("DB_HOST");
+                    String dbName = System.getenv("DB_NAME");
                     String user = System.getenv("DB_USER");
-                    if (user == null) user = "postgres";
-
                     String password = System.getenv("DB_PASSWORD");
+
+                    String url;
+                    if (host != null && dbName != null) {
+                    url = "jdbc:postgresql://" + host + ":5432/" + dbName;
+                    } else if (bucketUrl != null) {
+                    url = bucketUrl;
+                    } else {
+                    url = "jdbc:postgresql://localhost:5432/student";
+                    }
+
+                    if (user == null) user = "postgres";
                     if (password == null) password = "Rahul@2167";
 
                     Class.forName("org.postgresql.Driver");

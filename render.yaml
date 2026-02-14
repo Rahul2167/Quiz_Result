@@ -3,11 +3,28 @@ services:
     name: online-quiz
     env: docker
     plan: free
-    region: singapore # Optional: defaults to Oregon, but user might prefer Singapore based on timezone
+    region: singapore
     envVars:
-      - key: DB_URL
-        sync: false
+      - key: DB_HOST
+        fromDatabase:
+          name: quiz-db
+          property: host
+      - key: DB_NAME
+        fromDatabase:
+          name: quiz-db
+          property: database
       - key: DB_USER
-        sync: false
+        fromDatabase:
+          name: quiz-db
+          property: user
       - key: DB_PASSWORD
-        sync: false
+        fromDatabase:
+          name: quiz-db
+          property: password
+
+databases:
+  - name: quiz-db
+    plan: free
+    region: singapore
+    databaseName: student
+    user: postgres

@@ -88,13 +88,16 @@
                 </tr>
 
                 <% int rank=1; String errorMsg=null; Connection con=null; ResultSet rs=null; try { String
-                    url=System.getenv("DB_URL"); if (url==null) url="jdbc:postgresql://localhost:5432/student" ; String
-                    user=System.getenv("DB_USER"); if (user==null) user="postgres" ; String
-                    pwd=System.getenv("DB_PASSWORD"); if (pwd==null) pwd="Rahul@2167" ;
-                    Class.forName("org.postgresql.Driver"); con=DriverManager.getConnection(url, user, pwd); // Rank
-                    wise (highest score first) String sql="SELECT * FROM quiz_result ORDER BY score DESC, quiz_date ASC"
-                    ; Statement stmt=con.createStatement(); rs=stmt.executeQuery(sql); } catch(Exception e) {
-                    System.out.println(e); errorMsg="Database Error: " + e.getMessage(); } %>
+                    bucketUrl=System.getenv("DB_URL"); String host=System.getenv("DB_HOST"); String
+                    dbName=System.getenv("DB_NAME"); String user=System.getenv("DB_USER"); String
+                    pwd=System.getenv("DB_PASSWORD"); String url; if (host !=null && dbName !=null) {
+                    url="jdbc:postgresql://" + host + ":5432/" + dbName; } else if (bucketUrl !=null) { url=bucketUrl; }
+                    else { url="jdbc:postgresql://localhost:5432/student" ; } if (user==null) user="postgres" ; if
+                    (pwd==null) pwd="Rahul@2167" ; Class.forName("org.postgresql.Driver");
+                    con=DriverManager.getConnection(url, user, pwd); // Rank wise (highest score first) String
+                    sql="SELECT * FROM quiz_result ORDER BY score DESC, quiz_date ASC" ; Statement
+                    stmt=con.createStatement(); rs=stmt.executeQuery(sql); } catch(Exception e) { System.out.println(e);
+                    errorMsg="Database Error: " + e.getMessage(); } %>
 
                     <% if (errorMsg !=null) { %>
                         <div
