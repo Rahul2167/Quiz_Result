@@ -27,4 +27,4 @@ databases:
     plan: free
     region: singapore
     databaseName: student
-    user: postgres
+    user: rahul
