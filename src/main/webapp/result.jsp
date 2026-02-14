@@ -46,20 +46,21 @@
 
         <body>
 
-            <% // 1. Capture Form Data session.setAttribute("q10", request.getParameter("q10")); String
-                submittedName=request.getParameter("fullname"); if (submittedName !=null &&
-                !submittedName.trim().isEmpty()) { session.setAttribute("f1", submittedName); // Ensure name is in
-                session } // 2. Retrieve Data String name=(String) session.getAttribute("f1"); if (name==null)
-                name="Guest" ; String q1=(String) session.getAttribute("q1"); String q2=(String)
-                session.getAttribute("q2"); String q3=(String) session.getAttribute("q3"); String q4=(String)
-                session.getAttribute("q4"); String q5=(String) session.getAttribute("q5"); String q6=(String)
-                session.getAttribute("q6"); String q7=(String) session.getAttribute("q7"); String q8=(String)
-                session.getAttribute("q8"); String q9=(String) session.getAttribute("q9"); String q10=(String)
-                session.getAttribute("q10"); // 3. Calculate Score int score=0; if("New Delhi".equals(q1)) score++;
-                if("Mahatma Gandhi".equals(q2)) score++; if("Jupiter".equals(q3)) score++; if("Alexander Graham
-                Bell".equals(q4)) score++; if("Nile".equals(q5)) score++; if("2019".equals(q6)) score++;
-                if("Fiji".equals(q7)) score++; if("Department of Research and Development Laboratory".equals(q8))
-                score++; if("Uranus".equals(q9)) score++; if("Dr A.P.J. Abdul Kalam".equals(q10)) score++; String
+            <% // 1. Capture Form Data String q10Param=request.getParameter("q10"); session.setAttribute("q10",
+                q10Param); String submittedName=request.getParameter("fullname"); if (submittedName !=null &&
+                !submittedName.trim().isEmpty()) { session.setAttribute("f1", submittedName); } // 2. Retrieve Data
+                String name=(String) session.getAttribute("f1"); if (name==null) { name="Guest" ; } String q1=(String)
+                session.getAttribute("q1"); String q2=(String) session.getAttribute("q2"); String q3=(String)
+                session.getAttribute("q3"); String q4=(String) session.getAttribute("q4"); String q5=(String)
+                session.getAttribute("q5"); String q6=(String) session.getAttribute("q6"); String q7=(String)
+                session.getAttribute("q7"); String q8=(String) session.getAttribute("q8"); String q9=(String)
+                session.getAttribute("q9"); String q10=(String) session.getAttribute("q10"); // 3. Calculate Score int
+                score=0; if ("New Delhi".equals(q1)) score++; if ("Mahatma Gandhi".equals(q2)) score++; if
+                ("Jupiter".equals(q3)) score++; // Prevent string literal wrapping issues String
+                ans4="Alexander Graham Bell" ; if (ans4.equals(q4)) score++; if ("Nile".equals(q5)) score++; if
+                ("2019".equals(q6)) score++; if ("Fiji".equals(q7)) score++; String
+                ans8="Department of Research and Development Laboratory" ; if (ans8.equals(q8)) score++; if
+                ("Uranus".equals(q9)) score++; if ("Dr A.P.J. Abdul Kalam".equals(q10)) score++; String
                 resultVal=(score>= 6) ? "PASS" : "FAIL";
 
                 // 4. Database Connection (Dynamic for Render)
@@ -67,7 +68,7 @@
                 try {
                 Connection con;
 
-                // Allow both Individual Env Vars (Render Managed DB) and Single DB_URL
+                // Allow both Individual Env Vars and Single DB_URL
                 String bucketUrl = System.getenv("DB_URL");
                 String host = System.getenv("DB_HOST");
                 String dbName = System.getenv("DB_NAME");
@@ -76,7 +77,7 @@
 
                 String url;
                 if (host != null && dbName != null) {
-                // Render Managed DB pattern
+                // Render managed DB
                 url = "jdbc:postgresql://" + host + ":5432/" + dbName;
                 } else if (bucketUrl != null) {
                 // Generic connection string
@@ -87,7 +88,7 @@
                 }
 
                 if (user == null) user = "postgres";
-                if (password == null) password = "Rahul@2167"; // Fallback only
+                if (password == null) password = "Rahul@2167";
 
                 Class.forName("org.postgresql.Driver");
                 con = DriverManager.getConnection(url, user, password);
@@ -102,14 +103,13 @@
                 ps.executeUpdate();
                 con.close();
                 } catch(Exception e) {
-                System.out.println("DB Connection Error: " + e);
+                System.out.println("DB Error: " + e);
                 errorMsg = "Database Error: " + e.getMessage();
                 }
                 %>
 
-                <h1 id=welcome>Welcome, <%= name %>!</h1>
-
                 <div class="box">
+                    <h1 id=welcome>Welcome, <%= name %>!</h1>
                     <h2>Quiz Result</h2>
 
                     <!-- Error Display -->
