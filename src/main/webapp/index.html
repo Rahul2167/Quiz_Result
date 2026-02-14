@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz Home</title>
+   <style>
+   		* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    height: 100vh;
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    width: 350px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.container h1 {
+    margin-bottom: 25px;
+    color: #333;
+}
+
+.container input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+.container button {
+    width: 100%;
+    padding: 12px;
+    background: #4facfe;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.container button:hover {
+    background: #00c6ff;
+    background-color: rgb(255, 0, 255);
+}  	
+            
+        .btn:hover{
+        	transform: rotateX(360deg);
+        	transition:1s;
+        }	
+   </style>
+   
+</head>
+<body>
+
+    <div class="container">
+        <h1>Welcome to Quiz</h1>
+
+        <form action="quiz1.jsp" method="post">
+            <input 
+                type="text" 
+                name="fullname" 
+                placeholder="Enter your full name" 
+                required
+            >
+            <button type="submit" class="btn btn-login w-100">Start Quiz</button>
+        </form>
+    </div>
+
+</body>
+</html>
