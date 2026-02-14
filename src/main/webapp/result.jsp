@@ -54,7 +54,8 @@
                     q6=(String) session.getAttribute("q6"); String q7=(String) session.getAttribute("q7"); String
                     q8=(String) session.getAttribute("q8"); String q9=(String) session.getAttribute("q9"); String
                     q10=(String) session.getAttribute("q10"); // out.print(arg0) int score=0; if("New Delhi".equals(q1))
-                    score++; if("Mahatma Gandhi".equals(q2)) score++; if("Jupiter".equals(q3)) score++; if("Alexander Graham Bell".equals(q4)) score++; if("Nile".equals(q5)) score++; if("2019".equals(q6)) score++;
+                    score++; if("Mahatma Gandhi".equals(q2)) score++; if("Jupiter".equals(q3)) score++; if("Alexander
+                    Graham Bell".equals(q4)) score++; if("Nile".equals(q5)) score++; if("2019".equals(q6)) score++;
                     if("Fiji".equals(q7)) score++; if("Department of Research and Development Laboratory".equals(q8))
                     score++; if("Uranus".equals(q9)) score++; if("Dr A.P.J. Abdul Kalam".equals(q10)) score++; String
                     result=(score>= 6) ? "PASS" : "FAIL";
@@ -165,4 +166,3 @@
         </body>
 
         </html><!-- Force Update 1 -->
-
