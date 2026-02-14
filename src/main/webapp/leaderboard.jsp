@@ -77,16 +77,15 @@
 
             <h2>🏆 Leaderboard</h2>
 
-            <% String errorMsg=null; Connection con=null; Statement stmt=null; ResultSet rs=null; try { // Database
-                Connection (Dynamic for Render) String bucketUrl=System.getenv("DB_URL"); String
-                host=System.getenv("DB_HOST"); String dbName=System.getenv("DB_NAME"); String
-                user=System.getenv("DB_USER"); String password=System.getenv("DB_PASSWORD"); String url; if (host !=null
-                && dbName !=null) { // Render Managed DB url="jdbc:postgresql://" + host + ":5432/" + dbName; } else if
-                (bucketUrl !=null) { // Generic connection string url=bucketUrl; } else { // Fallback for local
-                url="jdbc:postgresql://localhost:5432/student" ; } if (user==null) user="postgres" ; if (password==null)
-                password="Rahul@2167" ; Class.forName("org.postgresql.Driver"); con=DriverManager.getConnection(url,
-                user, password); // Rank wise (highest score first) String
-                sql="SELECT * FROM quiz_result ORDER BY score DESC" ; stmt=con.createStatement();
+            <% String errorMsg=null; Connection con=null; Statement stmt=null; ResultSet rs=null; try { /* Database
+                Connection */ String bucketUrl=System.getenv("DB_URL"); String host=System.getenv("DB_HOST"); String
+                dbName=System.getenv("DB_NAME"); String user=System.getenv("DB_USER"); String
+                password=System.getenv("DB_PASSWORD"); String url; if (host !=null && dbName !=null) {
+                url="jdbc:postgresql://" + host + ":5432/" + dbName; } else if (bucketUrl !=null) { url=bucketUrl; }
+                else { url="jdbc:postgresql://localhost:5432/student" ; } if (user==null) user="postgres" ; if
+                (password==null) password="Rahul@2167" ; Class.forName("org.postgresql.Driver");
+                con=DriverManager.getConnection(url, user, password); /* Rank wise query */ String
+                sql="SELECT * FROM quiz_result ORDER BY score DESC, quiz_date ASC" ; stmt=con.createStatement();
                 rs=stmt.executeQuery(sql); } catch(Exception e) { errorMsg=e.getMessage(); e.printStackTrace(); } %>
 
                 <% if (errorMsg !=null) { %>
@@ -99,15 +98,20 @@
                         <table>
                             <tr>
                                 <th>Rank</th>
+                                <th>ID</th>
                                 <th>Name</th>
                                 <th>Score</th>
                                 <th>Result</th>
+                                <th>Date</th>
                             </tr>
 
                             <% int rank=1; if (rs !=null) { while(rs.next()) { %>
                                 <tr>
                                     <td>
                                         <%= rank++ %>
+                                    </td>
+                                    <td>
+                                        <%= rs.getInt("id") %>
                                     </td>
                                     <td>
                                         <%= rs.getString("fullname") %>
@@ -118,11 +122,14 @@
                                     <td>
                                         <%= rs.getString("result") %>
                                     </td>
+                                    <td>
+                                        <%= rs.getDate("quiz_date") %>
+                                    </td>
                                 </tr>
                                 <% } } %>
                         </table>
-                        <% } // Close resources if(rs !=null) rs.close(); if(stmt !=null) stmt.close(); if(con !=null)
-                            con.close(); %>
+                        <% } /* Close resources */ if(rs !=null) rs.close(); if(stmt !=null) stmt.close(); if(con
+                            !=null) con.close(); %>
 
                             <a href="index.html" style="text-decoration: none;">
                                 <button class="btn">⬅ Back To Quiz</button>

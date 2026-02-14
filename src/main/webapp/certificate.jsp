@@ -124,14 +124,14 @@
 
     <body>
 
-        <% // Retrieve Name String name=(String) session.getAttribute("f1"); if(name==null) name="Guest Candidate" ; //
-            Retrieve Answers String q1=(String) session.getAttribute("q1"); String q2=(String)
+        <% /* Retrieve Name */ String name=(String) session.getAttribute("f1"); if(name==null) name="Guest Candidate" ;
+            /* Retrieve Answers */ String q1=(String) session.getAttribute("q1"); String q2=(String)
             session.getAttribute("q2"); String q3=(String) session.getAttribute("q3"); String q4=(String)
             session.getAttribute("q4"); String q5=(String) session.getAttribute("q5"); String q6=(String)
             session.getAttribute("q6"); String q7=(String) session.getAttribute("q7"); String q8=(String)
             session.getAttribute("q8"); String q9=(String) session.getAttribute("q9"); String q10=(String)
-            session.getAttribute("q10"); // Recalculate Score (to be safe) int score=0; if ("New Delhi".equals(q1))
-            score++; if ("Mahatma Gandhi".equals(q2)) score++; if ("Jupiter".equals(q3)) score++; if ("Alexander Graham
+            session.getAttribute("q10"); /* Recalculate Score */ int score=0; if ("New Delhi".equals(q1)) score++; if
+            ("Mahatma Gandhi".equals(q2)) score++; if ("Jupiter".equals(q3)) score++; if ("Alexander Graham
             Bell".equals(q4)) score++; if ("Nile".equals(q5)) score++; if ("2019".equals(q6)) score++; if
             ("Fiji".equals(q7)) score++; if ("Department of Research and Development Laboratory".equals(q8)) score++; if
             ("Uranus".equals(q9)) score++; if ("Dr A.P.J. Abdul Kalam".equals(q10)) score++; String result=(score>= 6) ?
@@ -272,7 +272,7 @@
                     document.getElementById('downloadBtn').style.display = 'none';
 
                     // Generate PDF
-                    html2pdf().set(opt).from(element).save().then(function () {
+                    html2pdf().set(opt).from(element).from(element).save().then(function () {
                         // Show button again
                         document.getElementById('downloadBtn').style.display = 'block';
                     });
