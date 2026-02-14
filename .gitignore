@@ -1,0 +1,15 @@
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Build
+build/
+*.class
+
+# OS
+Thumbs.db
+Desktop.ini
+
+# Nested Repo
+Quiz_result/
