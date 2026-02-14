@@ -47,7 +47,6 @@
                 font-size: 32px;
                 font-weight: bold;
                 color: #d4af37;
-                /* Gold color */
                 border-bottom: 2px solid #ddd;
                 display: inline-block;
                 padding-bottom: 5px;
@@ -113,7 +112,6 @@
                 background: #1a2b3c;
             }
 
-            /* Print styles to hide button */
             @media print {
                 #downloadBtn {
                     display: none;
@@ -123,23 +121,27 @@
     </head>
 
     <body>
+        <% String name=(String) session.getAttribute("f1"); if (name==null) { name="Guest Candidate" ; } String
+            q1=(String) session.getAttribute("q1"); String q2=(String) session.getAttribute("q2"); String q3=(String)
+            session.getAttribute("q3"); String q4=(String) session.getAttribute("q4"); String q5=(String)
+            session.getAttribute("q5"); String q6=(String) session.getAttribute("q6"); String q7=(String)
+            session.getAttribute("q7"); String q8=(String) session.getAttribute("q8"); String q9=(String)
+            session.getAttribute("q9"); String q10=(String) session.getAttribute("q10"); int score=0; if ("New
+            Delhi".equals(q1)) { score++; } if ("Mahatma Gandhi".equals(q2)) { score++; } if ("Jupiter".equals(q3)) {
+            score++; } if ("Alexander Graham Bell".equals(q4)) { score++; } if ("Nile".equals(q5)) { score++; } if
+            ("2019".equals(q6)) { score++; } if ("Fiji".equals(q7)) { score++; } String
+            ans8="Department of Research and Development Laboratory" ; if (ans8.equals(q8)) { score++; } if
+            ("Uranus".equals(q9)) { score++; } if ("Dr A.P.J. Abdul Kalam".equals(q10)) { score++; } String
+            result="FAIL" ; if (score>= 6) {
+            result = "PASS";
+            }
 
-        <% /* Retrieve Name */ String name=(String) session.getAttribute("f1"); if(name==null) name="Guest Candidate" ;
-            /* Retrieve Answers */ String q1=(String) session.getAttribute("q1"); String q2=(String)
-            session.getAttribute("q2"); String q3=(String) session.getAttribute("q3"); String q4=(String)
-            session.getAttribute("q4"); String q5=(String) session.getAttribute("q5"); String q6=(String)
-            session.getAttribute("q6"); String q7=(String) session.getAttribute("q7"); String q8=(String)
-            session.getAttribute("q8"); String q9=(String) session.getAttribute("q9"); String q10=(String)
-            session.getAttribute("q10"); /* Recalculate Score */ int score=0; if ("New Delhi".equals(q1)) score++; if
-            ("Mahatma Gandhi".equals(q2)) score++; if ("Jupiter".equals(q3)) score++; if ("Alexander Graham
-            Bell".equals(q4)) score++; if ("Nile".equals(q5)) score++; if ("2019".equals(q6)) score++; if
-            ("Fiji".equals(q7)) score++; if ("Department of Research and Development Laboratory".equals(q8)) score++; if
-            ("Uranus".equals(q9)) score++; if ("Dr A.P.J. Abdul Kalam".equals(q10)) score++; String result=(score>= 6) ?
-            "PASS" : "FAIL";
-            String resultClass = (score >= 6) ? "pass" : "fail";
+            String resultClass = "fail";
+            if (score >= 6) {
+            resultClass = "pass";
+            }
             %>
 
-            <!-- PDF Content Container -->
             <div id="certificate">
                 <div class="header">Certificate of Completion</div>
                 <div class="sub-header">Online General Knowledge Quiz</div>
@@ -259,26 +261,20 @@
 
             <script>
                 function downloadPDF() {
-                    const element = document.getElementById('certificate');
-                    const opt = {
+                    var element = document.getElementById('certificate');
+                    var opt = {
                         margin: 10,
-                        filename: 'Certificate_<%= name %>.pdf',
+                        filename: 'Certificate.pdf',
                         image: { type: 'jpeg', quality: 0.98 },
                         html2canvas: { scale: 2 },
                         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
                     };
-
-                    // Old button hide
                     document.getElementById('downloadBtn').style.display = 'none';
-
-                    // Generate PDF
-                    html2pdf().set(opt).from(element).from(element).save().then(function () {
-                        // Show button again
+                    html2pdf().set(opt).from(element).save().then(function () {
                         document.getElementById('downloadBtn').style.display = 'block';
                     });
                 }
             </script>
-
     </body>
 
     </html>
