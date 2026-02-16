@@ -1,20 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
     <%@ page import="java.sql.*" %>
         <%! /* Helper to parse psql command if provided as a URL */ public String parsePsql(String psql) { if
-            (psql==null || !psql.trim().startsWith("psql")) return null; String host=null, port="5432" , db="postgres" ;
-            String[] parts=psql.split("\\s+"); for (int i=0; i < parts.length; i++) { if (("-h".equals(parts[i])
-            || "--host" .equals(parts[i])) && i + 1 < parts.length) host=parts[i+1]; if (("-p".equals(parts[i])
-            || "--port" .equals(parts[i])) && i + 1 < parts.length) port=parts[i+1]; if (("-d".equals(parts[i])
-            || "--dbname" .equals(parts[i])) && i + 1 < parts.length) db=parts[i+1]; } return host !=null
-            ? "jdbc:postgresql://" + host + ":" + port + "/" + db : null; } %>
-
+            (psql==null) return null; String t=psql.trim(); if (!t.startsWith("psql")) return null; String host=null,
+            port="5432" , db="postgres" ; String[] parts=t.split("\\s+"); for (int i=0; i < parts.length; i++) { if
+            (("-h".equals(parts[i]) || "--host" .equals(parts[i])) && i + 1 < parts.length) host=parts[i+1]; if
+            (("-p".equals(parts[i]) || "--port" .equals(parts[i])) && i + 1 < parts.length) port=parts[i+1]; if
+            (("-d".equals(parts[i]) || "--dbname" .equals(parts[i])) && i + 1 < parts.length) db=parts[i+1]; } return
+            host !=null ? "jdbc:postgresql://" + host + ":" + port + "/" + db : null; } %>
             <!DOCTYPE html>
             <html>
 
             <head>
                 <meta charset="UTF-8">
                 <title>Leaderboard</title>
-
                 <style>
                     body {
                         background: linear-gradient(135deg, #141e30, #243b55);
@@ -81,9 +79,7 @@
             </head>
 
             <body>
-
                 <h2>🏆 Leaderboard</h2>
-
                 <% String errorMsg=null; Connection con=null; Statement stmt=null; ResultSet rs=null; String
                     dbUrl=System.getenv("DB_URL"); String urlVar=System.getenv("URL"); String
                     databaseUrl=System.getenv("DATABASE_URL"); String host=System.getenv("DB_HOST"); String
@@ -104,16 +100,16 @@
                         SSL)" });
                         }
                         }
-                        String[] urlVars = { dbUrl, urlVar, databaseUrl };
-                        for (String v : urlVars) {
+                        String[] vars = { dbUrl, urlVar, databaseUrl };
+                        for (String v : vars) {
                         if (v == null || v.trim().isEmpty()) continue;
-                        String vTrim = v.trim();
-                        String parsed = vTrim.startsWith("psql") ? parsePsql(vTrim) : (vTrim.startsWith("postgres://") ?
-                        "jdbc:postgresql" + vTrim.substring(8) : vTrim);
+                        String vt = v.trim();
+                        String parsed = vt.startsWith("psql") ? parsePsql(vt) : (vt.startsWith("postgres://") ?
+                        "jdbc:postgresql" + vt.substring(8) : vt);
                         if (parsed != null) {
-                        String sslUrl = parsed + (parsed.contains("?") ? (parsed.contains("sslmode") ? "" :
+                        String sUrl = parsed + (parsed.contains("?") ? (parsed.contains("sslmode") ? "" :
                         "&sslmode=require") : "?sslmode=require");
-                        strategies.add(new String[]{ sslUrl, "URL Var (SSL)" });
+                        strategies.add(new String[]{ sUrl, "URL Var (SSL)" });
                         strategies.add(new String[]{ parsed, "URL Var (As-is)" });
                         }
                         }
@@ -125,11 +121,9 @@
                         try {
                         con = DriverManager.getConnection(s[0], user, pass);
                         if (con != null) break;
-                        } catch (Exception e) { /* Continue trying next strategy */ }
+                        } catch (Exception e) { /* try next */ }
                         }
-
-                        if (con == null) throw new Exception("All connection strategies failed. Verify your Render env
-                        vars.");
+                        if (con == null) throw new Exception("All connection strategies failed.");
 
                         String sql = "SELECT * FROM quiz_result ORDER BY score DESC, quiz_date ASC";
                         stmt = con.createStatement();
@@ -138,6 +132,7 @@
                         errorMsg = e.getMessage();
                         }
                         %>
+
                         <% if (errorMsg !=null) { %>
                             <div
                                 style="width: 80%; margin: 20px auto; background-color: #ffe6e6; color: red; padding: 15px; border-radius: 5px; text-align: left;">
@@ -154,7 +149,6 @@
                                         <th>Result</th>
                                         <th>Date</th>
                                     </tr>
-
                                     <% int rank=1; if (rs !=null) { while(rs.next()) { %>
                                         <tr>
                                             <td>
@@ -184,7 +178,6 @@
                                     <a href="index.html" style="text-decoration: none;">
                                         <button class="btn">⬅ Back To Quiz</button>
                                     </a>
-
             </body>
 
             </html>
