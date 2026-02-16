@@ -6,25 +6,12 @@ services:
     region: singapore
     envVars:
       - key: DB_HOST
-        fromDatabase:
-          name: quiz-db
-          property: host
+        value: db.ojixfqxwtqutcelrzwmd.supabase.co
       - key: DB_NAME
-        fromDatabase:
-          name: quiz-db
-          property: database
+        value: postgres
       - key: DB_USER
-        fromDatabase:
-          name: quiz-db
-          property: user
+        value: postgres
       - key: DB_PASSWORD
-        fromDatabase:
-          name: quiz-db
-          property: password
-
-databases:
-  - name: quiz-db
-    plan: free
-    region: singapore
-    databaseName: student
-    user: rahul
+        value: Rahul216746
+      - key: JAVA_OPTS
+        value: -Djava.security.egd=file:/dev/./urandom
