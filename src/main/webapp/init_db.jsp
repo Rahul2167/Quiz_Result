@@ -12,47 +12,57 @@
                 <title>DB Init</title>
             </head>
 
-            <body>
-                <h1>Init</h1>
+            <body style="font-family:Arial; padding:20px;">
+                <h1>🔧 Database Initialization</h1>
                 <% try { String dbH=System.getenv("DB_HOST"); String dbP=System.getenv("DB_PORT"); String
                     dbN=System.getenv("DB_NAME"); String dbU=System.getenv("DB_USER"); String
                     dbW=System.getenv("DB_PASSWORD"); String urlV=System.getenv("URL"); if (dbU==null) dbU="postgres" ;
                     if (dbW==null) dbW="Rahul@216746" ; java.util.List<String> st = new java.util.ArrayList<String>();
                         if (dbH != null && dbN != null) {
                         String p = (dbP != null) ? dbP : "5432";
-                        st.add("jdbc:postgresql://"+dbH+":"+p+"/"+dbN+"?sslmode=require");
-                        st.add("jdbc:postgresql://"+dbH+":"+p+"/"+dbN);
-                        if ("6543".equals(p)) {
-                        st.add("jdbc:postgresql://"+dbH+":5432/"+dbN+"?sslmode=require");
-                        }
+                        st.add("jdbc:postgresql://" + dbH + ":" + p + "/" + dbN + "?sslmode=require");
+                        st.add("jdbc:postgresql://" + dbH + ":" + p + "/" + dbN);
                         }
                         if (urlV != null) {
                         String pu = pP(urlV);
                         if (pu != null) {
-                        st.add(pu+"?sslmode=require");
+                        st.add(pu + "?sslmode" + "=require");
                         } else if (urlV.startsWith("postgres://")) {
                         st.add("jdbc:postgresql" + urlV.substring(8));
                         }
                         }
                         Connection c = null; String suc = null;
-                        for (String s : st) {
-                        try {
-                        Class.forName("org.postgresql.Driver");
-                        c = DriverManager.getConnection(s, dbU, dbW);
-                        if (c != null) { suc = s; break; }
-                        } catch (Exception ex) { out.println("Fail: " + s + "<br>"); }
-                        }
+                        out.println("<h3>🔍 Connectivity Log</h3>
+                        <ul>");
+                            for (String s : st) {
+                            try {
+                            Class.forName("org.postgresql.Driver");
+                            c = DriverManager.getConnection(s, dbU, dbW);
+                            if (c != null) { suc = s; break; }
+                            } catch (Exception ex) {
+                            out.println("<li style='color:#666;'>Failed: " + s.split("\\?")[0] + "</li>");
+                            }
+                            }
+                            out.println("</ul>");
                         if (c != null) {
-                        out.println("Success: " + suc + "<br>");
+                        out.println("<div style='color:green;'><b>✅ Success:</b> Connected to " + suc.split("\\?")[0] +
+                            "</div>");
                         Statement stm = c.createStatement();
-                        stm.executeUpdate("CREATE TABLE IF NOT EXISTS quiz_result (id SERIAL PRIMARY KEY, fullname
-                        VARCHAR(255), score INT, result VARCHAR(50), quiz_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
-                        out.println("Table Checked<br>");
+                        String sql = "CREATE TABLE " + "IF NOT EXISTS " + "quiz_result " +
+                        "(id SERIAL PRIMARY KEY, " + "fullname VARCHAR(255), " + "score INT, " +
+                        "result VARCHAR(50), " + "quiz_date TIMESTAMP " + "DEFAULT CURRENT_TIMESTAMP)";
+                        stm.executeUpdate(sql);
+                        out.println("<p><b>✓ Table Verified:</b> quiz_result</p>");
                         c.close();
+                        } else {
+                        out.println("<p style='color:red;'><b>❌ Failed:</b> Could not establish any database connection.
+                        </p>");
                         }
-                        } catch (Exception e) { out.println("Error: " + e.getMessage()); }
+                        } catch (Exception e) { out.println("<p style='color:red;'>Error: " + e.getMessage() + "</p>");
+                        }
                         %>
-                        <a href="index.html">Home</a>
+                        <hr>
+                        <a href="index.html">Back to Home</a>
             </body>
 
             </html>

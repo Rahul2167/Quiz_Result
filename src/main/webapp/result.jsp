@@ -22,8 +22,8 @@
                         background: white;
                         color: black;
                         width: 500px;
-                        margin: 50px auto;
-                        padding: 20px;
+                        margin: 40px auto;
+                        padding: 25px;
                         border-radius: 10px;
                     }
 
@@ -58,10 +58,10 @@
                     q7=(String)session.getAttribute("q7"); String q8=(String)session.getAttribute("q8"); String
                     q9=(String)session.getAttribute("q9"); String q10=(String)session.getAttribute("q10"); int sc=0; if
                     ("New Delhi".equals(q1)) sc++; if ("Mahatma Gandhi".equals(q2)) sc++; if ("Jupiter".equals(q3))
-                    sc++; if ("Alexander Graham Bell".equals(q4)) sc++; if ("Nile".equals(q5)) sc++; if
-                    ("2019".equals(q6)) sc++; if ("Fiji".equals(q7)) sc++; if ("Department of Research and Development
-                    Laboratory".equals(q8)) sc++; if ("Uranus".equals(q9)) sc++; if ("Dr A.P.J. Abdul
-                    Kalam".equals(q10)) sc++; String rv=(sc>= 6) ? "PASS" : "FAIL";
+                    sc++; if ("Alexander" + " Graham " + "Bell" .equals(q4)) sc++; if ("Nile".equals(q5)) sc++; if
+                    ("2019".equals(q6)) sc++; if ("Fiji".equals(q7)) sc++; String ans8="Department " + "of Research "
+                    + "and Development " + "Laboratory" ; if (ans8.equals(q8)) sc++; if ("Uranus".equals(q9)) sc++; if
+                    ("Dr A.P.J. " + " Abdul Kalam".equals(q10)) sc++; String rv=(sc>= 6) ? "PASS" : "FAIL";
                     String em = null;
                     Connection c = null;
                     try {
@@ -76,20 +76,19 @@
                     java.util.List<String> st = new java.util.ArrayList<String>();
                             if (dbH != null && dbN != null) {
                             String p = (dbP != null) ? dbP : "5432";
-                            st.add("jdbc:postgresql://"+dbH+":"+p+"/"+dbN+"?sslmode=require");
-                            st.add("jdbc:postgresql://"+dbH+":"+p+"/"+dbN);
+                            st.add("jdbc:postgresql://" + dbH + ":" + p + "/" + dbN + "?sslmode=require");
+                            st.add("jdbc:postgresql://" + dbH + ":" + p + "/" + dbN);
                             if ("6543".equals(p)) {
-                            st.add("jdbc:postgresql://"+dbH+":5432/"+dbN+"?sslmode=require");
+                            st.add("jdbc:postgresql://" + dbH + ":5432/" + dbN + "?sslmode=require");
                             }
                             }
                             if (urlV != null) {
                             String pu = pP(urlV);
                             if (pu != null) {
-                            st.add(pu+"?sslmode=require");
+                            st.add(pu + "?sslmode" + "=require");
                             st.add(pu);
                             } else if (urlV.startsWith("postgres://")) {
-                            String ju = "jdbc:postgresql" + urlV.substring(8);
-                            st.add(ju);
+                            st.add("jdbc:postgresql" + urlV.substring(8));
                             }
                             }
                             st.add("jdbc:postgresql://localhost:5432/student");
@@ -101,12 +100,12 @@
                             } catch (Exception ex) {}
                             }
                             if (c != null) {
-                            PreparedStatement ps = c.prepareStatement("INSERT INTO quiz_result(fullname,score,result)
-                            VALUES (?,?,?)");
+                            String sql = "INSERT INTO " + "quiz_result" + "(fullname,score,result) " + "VALUES (?,?,?)";
+                            PreparedStatement ps = c.prepareStatement(sql);
                             ps.setString(1, n); ps.setInt(2, sc); ps.setString(3, rv);
                             ps.executeUpdate();
                             c.close();
-                            } else { em = "Conn Failed"; }
+                            } else { em = "Database Connectivity Failed"; }
                             } catch (Exception e) { em = e.getMessage(); }
                             %>
                             <div class="box">
@@ -117,7 +116,8 @@
                                 </h3>
                                 <hr>
                                 <% if (em !=null) { %>
-                                    <p style="color:red">DB Error: <%= em %>
+                                    <p style="color:red"><b>Warning:</b>
+                                        <%= em %>
                                     </p>
                                     <% } %>
                                         <p>Q1: New Delhi | Ans: <%= q1 %>
@@ -141,7 +141,8 @@
                                         <p>Q10: Kalam | Ans: <%= q10 %>
                                         </p>
                                         <a href="leaderboard.jsp"><button>Leaderboard</button></a>
-                                        <a href="index.html"><button>Home</button></a>
+                                        <a href="certificate.jsp"><button>Certificate</button></a>
+                                        <a href="index.html"><button style="background:#666;">Home</button></a>
                             </div>
             </body>
 

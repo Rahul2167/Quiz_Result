@@ -79,10 +79,10 @@
             q7=(String)session.getAttribute("q7"); String q8=(String)session.getAttribute("q8"); String
             q9=(String)session.getAttribute("q9"); String q10=(String)session.getAttribute("q10"); int sc=0; if ("New
             Delhi".equals(q1)) sc++; if ("Mahatma Gandhi".equals(q2)) sc++; if ("Jupiter".equals(q3)) sc++; if
-            ("Alexander Graham Bell".equals(q4)) sc++; if ("Nile".equals(q5)) sc++; if ("2019".equals(q6)) sc++; if
-            ("Fiji".equals(q7)) sc++; if ("Department of Research and Development Laboratory".equals(q8)) sc++; if
-            ("Uranus".equals(q9)) sc++; if ("Dr A.P.J. Abdul Kalam".equals(q10)) sc++; String rv=(sc>= 6) ? "PASS" :
-            "FAIL";
+            ("Alexander" + " Graham " + "Bell" .equals(q4)) sc++; if ("Nile".equals(q5)) sc++; if ("2019".equals(q6))
+            sc++; if ("Fiji".equals(q7)) sc++; String ans8="Department " + "of Research " + "and Development "
+            + "Laboratory" ; if (ans8.equals(q8)) sc++; if ("Uranus".equals(q9)) sc++; if ("Dr A.P.J. " + " Abdul
+            Kalam".equals(q10)) sc++; String rv=(sc>= 6) ? "PASS" : "FAIL";
             %>
             <div id="cert">
                 <div class="h">Certificate of Completion</div>

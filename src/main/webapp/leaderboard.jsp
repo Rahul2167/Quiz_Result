@@ -1,161 +1,111 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-    <%@ page import="java.sql.*" %>
-        <%! /* Helper to parse psql command if provided as a URL */ public String parsePsql(String psql) { if
-            (psql==null) return null; String t=psql.trim(); if (!t.startsWith("psql")) return null; String host=null,
-            port="5432" , db="postgres" ; String[] parts=t.split("\\s+"); for (int i=0; i < parts.length; i++) { if
-            (("-h".equals(parts[i]) || "--host" .equals(parts[i])) && i + 1 < parts.length) host=parts[i+1]; if
-            (("-p".equals(parts[i]) || "--port" .equals(parts[i])) && i + 1 < parts.length) port=parts[i+1]; if
-            (("-d".equals(parts[i]) || "--dbname" .equals(parts[i])) && i + 1 < parts.length) db=parts[i+1]; } return
-            host !=null ? "jdbc:postgresql://" + host + ":" + port + "/" + db : null; } %>
+<%@ page import="java.sql.*" %>
+    <%@ page language="java" %>
+        <%! public String pP(String p) { if (p==null) return null; String t=p.trim(); if (!t.startsWith("psql")) return
+            null; String h=null, pt="5432" , d="postgres" ; String[] s=t.split("\\s+"); for (int i=0; i < s.length; i++)
+            { if ("-h".equals(s[i]) && i+1 < s.length) h=s[i+1]; if ("-p".equals(s[i]) && i+1 < s.length) pt=s[i+1]; if
+            ("-d".equals(s[i]) && i+1 < s.length) d=s[i+1]; } if (h==null) return null; return "jdbc:postgresql://" + h
+            + ":" + pt + "/" + d; } %>
             <!DOCTYPE html>
             <html>
 
             <head>
-                <meta charset="UTF-8">
                 <title>Leaderboard</title>
                 <style>
                     body {
-                        background: linear-gradient(135deg, #141e30, #243b55);
-                        font-family: Arial, sans-serif;
+                        background: #141e30;
                         color: white;
                         text-align: center;
-                    }
-
-                    h2 {
-                        text-align: center;
-                        margin-top: 30px;
+                        font-family: Arial;
                     }
 
                     table {
-                        margin: 30px auto;
+                        margin: 20px auto;
                         border-collapse: collapse;
                         width: 80%;
                         background: white;
                         color: black;
-                        border-radius: 10px;
+                        border-radius: 8px;
                         overflow: hidden;
-                        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
                     }
 
                     th {
                         background: #243b55;
                         color: white;
                         padding: 12px;
-                        text-align: center;
                     }
 
                     td {
-                        padding: 10px;
-                        text-align: center;
+                        padding: 8px;
+                        border-bottom: 1px solid #ddd;
                     }
 
-                    tr:nth-child(even) {
-                        background: #f2f2f2;
-                    }
-
-                    tr:hover {
-                        background: #dcdcdc;
-                    }
-
-                    .btn {
-                        display: block;
-                        margin: 20px auto;
-                        padding: 12px 25px;
+                    button {
+                        padding: 10px 20px;
                         background: #ff4b5c;
-                        color: black;
-                        border: none;
-                        border-radius: 6px;
-                        cursor: pointer;
-                        font-size: 16px;
-                    }
-
-                    .btn:hover {
-                        background: #ff2e44;
-                        transition: 0.3s;
-                        transform: scale(1.05);
                         color: white;
+                        border: none;
+                        border-radius: 5px;
+                        cursor: pointer;
                     }
                 </style>
             </head>
 
             <body>
                 <h2>🏆 Leaderboard</h2>
-                <% String errorMsg=null; Connection con=null; Statement stmt=null; ResultSet rs=null; String
-                    dbUrl=System.getenv("DB_URL"); String urlVar=System.getenv("URL"); String
-                    databaseUrl=System.getenv("DATABASE_URL"); String host=System.getenv("DB_HOST"); String
-                    port=System.getenv("DB_PORT"); String dbName=System.getenv("DB_NAME"); String
-                    user=System.getenv("DB_USER"); String pass=System.getenv("DB_PASSWORD"); if (user==null)
-                    user="postgres" ; if (pass==null) pass="Rahul@2167" ; /* Multi-Try Logic */ java.util.List<String[]>
-                    strategies = new java.util.ArrayList<String[]>();
-                        if (host != null && dbName != null) {
-                        String p = (port != null) ? port : "5432";
-                        strategies.add(new String[]{ "jdbc:postgresql://" + host + ":" + p + "/" + dbName +
-                        "?sslmode=require", "Primary (SSL)" });
-                        strategies.add(new String[]{ "jdbc:postgresql://" + host + ":" + p + "/" + dbName, "Primary (No
-                        SSL)" });
+                <% String em=null; Connection c=null; Statement stm=null; ResultSet rs=null; try { String
+                    dbH=System.getenv("DB_HOST"); String dbP=System.getenv("DB_PORT"); String
+                    dbN=System.getenv("DB_NAME"); String dbU=System.getenv("DB_USER"); String
+                    dbW=System.getenv("DB_PASSWORD"); String urlV=System.getenv("URL"); if (dbU==null) dbU="postgres" ;
+                    if (dbW==null) dbW="Rahul@216746" ; java.util.List<String> st = new java.util.ArrayList<String>();
+                        if (dbH != null && dbN != null) {
+                        String p = (dbP != null) ? dbP : "5432";
+                        st.add("jdbc:postgresql://" + dbH + ":" + p + "/" + dbN + "?sslmode=require");
+                        st.add("jdbc:postgresql://" + dbH + ":" + p + "/" + dbN);
                         if ("6543".equals(p)) {
-                        strategies.add(new String[]{ "jdbc:postgresql://" + host + ":5432/" + dbName +
-                        "?sslmode=require", "Host + 5432 (SSL)" });
-                        strategies.add(new String[]{ "jdbc:postgresql://" + host + ":5432/" + dbName, "Host + 5432 (No
-                        SSL)" });
+                        st.add("jdbc:postgresql://" + dbH + ":5432/" + dbN + "?sslmode=require");
                         }
                         }
-                        String[] vars = { dbUrl, urlVar, databaseUrl };
-                        for (String v : vars) {
-                        if (v == null || v.trim().isEmpty()) continue;
-                        String vt = v.trim();
-                        String parsed = vt.startsWith("psql") ? parsePsql(vt) : (vt.startsWith("postgres://") ?
-                        "jdbc:postgresql" + vt.substring(8) : vt);
-                        if (parsed != null) {
-                        String sUrl = parsed + (parsed.contains("?") ? (parsed.contains("sslmode") ? "" :
-                        "&sslmode=require") : "?sslmode=require");
-                        strategies.add(new String[]{ sUrl, "URL Var (SSL)" });
-                        strategies.add(new String[]{ parsed, "URL Var (As-is)" });
+                        if (urlV != null) {
+                        String pu = pP(urlV);
+                        if (pu != null) {
+                        st.add(pu + "?sslmode" + "=require");
+                        st.add(pu);
+                        } else if (urlV.startsWith("postgres://")) {
+                        st.add("jdbc:postgresql" + urlV.substring(8));
                         }
                         }
-                        strategies.add(new String[]{ "jdbc:postgresql://localhost:5432/student", "Localhost" });
-
-                        try {
+                        st.add("jdbc:postgresql://localhost:5432/student");
                         Class.forName("org.postgresql.Driver");
-                        for (String[] s : strategies) {
+                        for (String s : st) {
                         try {
-                        con = DriverManager.getConnection(s[0], user, pass);
-                        if (con != null) break;
-                        } catch (Exception e) { /* try next */ }
+                        c = DriverManager.getConnection(s, dbU, dbW);
+                        if (c != null) break;
+                        } catch (Exception ex) {}
                         }
-                        if (con == null) throw new Exception("All connection strategies failed.");
-
-                        String sql = "SELECT * FROM quiz_result ORDER BY score DESC, quiz_date ASC";
-                        stmt = con.createStatement();
-                        rs = stmt.executeQuery(sql);
-                        } catch(Exception e) {
-                        errorMsg = e.getMessage();
-                        }
+                        if (c != null) {
+                        stm = c.createStatement();
+                        String sql = "SELECT * FROM " + "quiz_result" + " ORDER BY " + "score DESC, id DESC " + "LIMIT
+                        100";
+                        rs = stm.executeQuery(sql);
+                        } else { em = "Database Connectivity Failed"; }
+                        } catch (Exception e) { em = e.getMessage(); }
                         %>
-
-                        <% if (errorMsg !=null) { %>
-                            <div
-                                style="width: 80%; margin: 20px auto; background-color: #ffe6e6; color: red; padding: 15px; border-radius: 5px; text-align: left;">
-                                <strong>Error connecting to database:</strong><br>
-                                <%= errorMsg %>
+                        <% if (em !=null) { %>
+                            <div style="color:red; background:#ffe6e6; padding:10px; margin:20px;"><b>Error:</b>
+                                <%= em %>
                             </div>
                             <% } else { %>
                                 <table>
                                     <tr>
                                         <th>Rank</th>
-                                        <th>ID</th>
                                         <th>Name</th>
                                         <th>Score</th>
                                         <th>Result</th>
-                                        <th>Date</th>
                                     </tr>
-                                    <% int rank=1; if (rs !=null) { while(rs.next()) { %>
+                                    <% int r=1; while(rs !=null && rs.next()) { %>
                                         <tr>
                                             <td>
-                                                <%= rank++ %>
-                                            </td>
-                                            <td>
-                                                <%= rs.getInt("id") %>
+                                                <%= r++ %>
                                             </td>
                                             <td>
                                                 <%= rs.getString("fullname") %>
@@ -166,18 +116,11 @@
                                             <td>
                                                 <%= rs.getString("result") %>
                                             </td>
-                                            <td>
-                                                <%= rs.getDate("quiz_date") %>
-                                            </td>
                                         </tr>
-                                        <% } } %>
+                                        <% } %>
                                 </table>
-                                <% } if(rs !=null) rs.close(); if(stmt !=null) stmt.close(); if(con !=null) con.close();
-                                    %>
-
-                                    <a href="index.html" style="text-decoration: none;">
-                                        <button class="btn">⬅ Back To Quiz</button>
-                                    </a>
+                                <% } if(rs !=null) rs.close(); if(stm !=null) stm.close(); if(c !=null) c.close(); %>
+                                    <a href="index.html"><button>Back To Quiz</button></a>
             </body>
 
             </html>
