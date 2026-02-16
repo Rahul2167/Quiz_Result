@@ -1,149 +1,141 @@
 <%@ page import="java.sql.*" %>
-    <%@ page language="java" %>
-        <%! public String pP(String p) { if (p==null) return null; String t=p.trim(); if (!t.startsWith("psql")) return
-            null; String h=null, pt="5432" , d="postgres" ; String[] s=t.split("\\s+"); for (int i=0; i < s.length; i++)
-            { if ("-h".equals(s[i]) && i+1 < s.length) h=s[i+1]; if ("-p".equals(s[i]) && i+1 < s.length) pt=s[i+1]; if
-            ("-d".equals(s[i]) && i+1 < s.length) d=s[i+1]; } if (h==null) return null; return "jdbc:postgresql://" + h
-            + ":" + pt + "/" + d; } %>
-            <!DOCTYPE html>
-            <html>
+<%@ page language="java" %>
 
-            <head>
-                <title>Result</title>
-                <style>
-                    body {
-                        background: #141e30;
-                        color: white;
-                        text-align: center;
-                        font-family: Arial;
-                    }
+<!DOCTYPE html>
+<html>
+<head>
+<title>Final Result</title>
+<style>
 
-                    .box {
-                        background: white;
-                        color: black;
-                        width: 500px;
-                        margin: 40px auto;
-                        padding: 25px;
-                        border-radius: 10px;
-                    }
+    body {
+        background: linear-gradient(135deg,#141e30,#243b55);
+        font-family: Arial;
+        color: white;
+        text-align: center;
+    }
+    .box {
+        background: white;
+        color: black;
+        width: 600px;
+        margin: 40px auto;
+        padding: 30px;
+        border-radius: 10px;
+    }
+    .pass { color: green; font-weight: bold; }
+    .fail { color: red; font-weight: bold; }
+    button {
+        padding: 10px 20px;
+        background: #243b55;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+</style>
+</head>
 
-                    .p {
-                        color: green;
-                        font-weight: bold;
-                    }
+<body>
 
-                    .f {
-                        color: red;
-                        font-weight: bold;
-                    }
+<%
+    session.setAttribute("q10", request.getParameter("q10"));
+%>
+   <h1 id=welcome>Welcome, <% String f1= request.getParameter("fullname");%>!</h1>
+<%
+    String name = (String) session.getAttribute("f1");
+    
 
-                    button {
-                        padding: 10px;
-                        background: #243b55;
-                        color: white;
-                        border: none;
-                        border-radius: 5px;
-                        cursor: pointer;
-                    }
-                </style>
-            </head>
+String q1 = (String) session.getAttribute("q1");
+String q2 = (String) session.getAttribute("q2");
+String q3 = (String) session.getAttribute("q3");
+String q4 = (String) session.getAttribute("q4");
+String q5 = (String) session.getAttribute("q5");
+String q6 = (String) session.getAttribute("q6");
+String q7 = (String) session.getAttribute("q7");
+String q8 = (String) session.getAttribute("q8");
+String q9 = (String) session.getAttribute("q9");
+String q10 = (String) session.getAttribute("q10");
 
-            <body>
-                <% String q10p=request.getParameter("q10"); if (q10p !=null) session.setAttribute("q10", q10p); String
-                    fn=request.getParameter("fullname"); if (fn !=null && !fn.isEmpty()) session.setAttribute("f1", fn);
-                    String n=(String)session.getAttribute("f1"); if (n==null) n="Guest" ; String
-                    q1=(String)session.getAttribute("q1"); String q2=(String)session.getAttribute("q2"); String
-                    q3=(String)session.getAttribute("q3"); String q4=(String)session.getAttribute("q4"); String
-                    q5=(String)session.getAttribute("q5"); String q6=(String)session.getAttribute("q6"); String
-                    q7=(String)session.getAttribute("q7"); String q8=(String)session.getAttribute("q8"); String
-                    q9=(String)session.getAttribute("q9"); String q10=(String)session.getAttribute("q10"); int sc=0; if
-                    ("New Delhi".equals(q1)) sc++; if ("Mahatma Gandhi".equals(q2)) sc++; if ("Jupiter".equals(q3))
-                    sc++; if ("Alexander" + " Graham " + "Bell" .equals(q4)) sc++; if ("Nile".equals(q5)) sc++; if
-                    ("2019".equals(q6)) sc++; if ("Fiji".equals(q7)) sc++; String ans8="Department " + "of Research "
-                    + "and Development " + "Laboratory" ; if (ans8.equals(q8)) sc++; if ("Uranus".equals(q9)) sc++; if
-                    ("Dr A.P.J. " + " Abdul Kalam".equals(q10)) sc++; String rv=(sc>= 6) ? "PASS" : "FAIL";
-                    String em = null;
-                    Connection c = null;
-                    try {
-                    String dbH = System.getenv("DB_HOST");
-                    String dbP = System.getenv("DB_PORT");
-                    String dbN = System.getenv("DB_NAME");
-                    String dbU = System.getenv("DB_USER");
-                    String dbW = System.getenv("DB_PASSWORD");
-                    String urlV = System.getenv("URL");
-                    if (dbU == null) dbU = "postgres";
-                    if (dbW == null) dbW = "Rahul@216746";
-                    java.util.List<String> st = new java.util.ArrayList<String>();
-                            if (dbH != null && dbN != null) {
-                            String p = (dbP != null) ? dbP : "5432";
-                            st.add("jdbc:postgresql://" + dbH + ":" + p + "/" + dbN + "?sslmode=require");
-                            st.add("jdbc:postgresql://" + dbH + ":" + p + "/" + dbN);
-                            if ("6543".equals(p)) {
-                            st.add("jdbc:postgresql://" + dbH + ":5432/" + dbN + "?sslmode=require");
-                            }
-                            }
-                            if (urlV != null) {
-                            String pu = pP(urlV);
-                            if (pu != null) {
-                            st.add(pu + "?sslmode" + "=require");
-                            st.add(pu);
-                            } else if (urlV.startsWith("postgres://")) {
-                            st.add("jdbc:postgresql" + urlV.substring(8));
-                            }
-                            }
-                            st.add("jdbc:postgresql://localhost:5432/student");
-                            Class.forName("org.postgresql.Driver");
-                            for (String s : st) {
-                            try {
-                            c = DriverManager.getConnection(s, dbU, dbW);
-                            if (c != null) break;
-                            } catch (Exception ex) {}
-                            }
-                            if (c != null) {
-                            String sql = "INSERT INTO " + "quiz_result" + "(fullname,score,result) " + "VALUES (?,?,?)";
-                            PreparedStatement ps = c.prepareStatement(sql);
-                            ps.setString(1, n); ps.setInt(2, sc); ps.setString(3, rv);
-                            ps.executeUpdate();
-                            c.close();
-                            } else { em = "Database Connectivity Failed"; }
-                            } catch (Exception e) { em = e.getMessage(); }
-                            %>
-                            <div class="box">
-                                <h1>Welcome <%= n %>
-                                </h1>
-                                <h2>Score: <%= sc %> / 10</h2>
-                                <h3 class="<%= rv.equals(" PASS") ? "p" : "f" %>">Result: <%= rv %>
-                                </h3>
-                                <hr>
-                                <% if (em !=null) { %>
-                                    <p style="color:red"><b>Warning:</b>
-                                        <%= em %>
-                                    </p>
-                                    <% } %>
-                                        <p>Q1: New Delhi | Ans: <%= q1 %>
-                                        </p>
-                                        <p>Q2: Mahatma Gandhi | Ans: <%= q2 %>
-                                        </p>
-                                        <p>Q3: Jupiter | Ans: <%= q3 %>
-                                        </p>
-                                        <p>Q4: A.G. Bell | Ans: <%= q4 %>
-                                        </p>
-                                        <p>Q5: Nile | Ans: <%= q5 %>
-                                        </p>
-                                        <p>Q6: 2019 | Ans: <%= q6 %>
-                                        </p>
-                                        <p>Q7: Fiji | Ans: <%= q7 %>
-                                        </p>
-                                        <p>Q8: DRDL | Ans: <%= q8 %>
-                                        </p>
-                                        <p>Q9: Uranus | Ans: <%= q9 %>
-                                        </p>
-                                        <p>Q10: Kalam | Ans: <%= q10 %>
-                                        </p>
-                                        <a href="leaderboard.jsp"><button>Leaderboard</button></a>
-                                        <a href="certificate.jsp"><button>Certificate</button></a>
-                                        <a href="index.html"><button style="background:#666;">Home</button></a>
-                            </div>
-            </body>
+    
+  // out.print(arg0)
+    int score = 0;
 
-            </html>
+    if("New Delhi".equals(q1)) score++;
+    if("Mahatma Gandhi".equals(q2)) score++;
+    if("Jupiter".equals(q3)) score++;
+    if("Alexander Graham Bell".equals(q4)) score++;
+    if("Nile".equals(q5)) score++;
+    if("2019".equals(q6)) score++;
+    if("Fiji".equals(q7)) score++;
+    if("Department of Research and Development Laboratory".equals(q8)) score++;
+    if("Uranus".equals(q9)) score++;
+    if("Dr A.P.J. Abdul Kalam".equals(q10)) score++;
+
+    String result = (score >= 6) ? "PASS" : "FAIL";
+
+    try
+	{
+    	String id=request.getParameter("id");
+    	  Connection con;
+    	  Statement stmt;
+    	  ResultSet rs;
+    	  PreparedStatement psmt;
+    	  
+		String url="jdbc:postgresql://localhost:5432/student";
+		String user="postgres";
+		String password="Rahul@2167";
+		Class.forName("org.postgresql.Driver");
+		con=DriverManager.getConnection(url,user,password);	
+
+    PreparedStatement ps = con.prepareStatement(
+        "INSERT INTO quiz_result(fullname,score,result) VALUES (?,?,?)");
+
+    ps.setString(1, name);
+    ps.setInt(2, score);
+    ps.setString(3, result);
+
+    ps.executeUpdate();
+    con.close();
+    %>
+
+<div class="box">
+    <h2>Quiz Result</h2>
+    <h3>Candidate: <%= name %></h3>
+
+    <h3>Score: <%= score %> / 10</h3>
+
+    <h3 class="<%= result.equals("PASS") ? "pass" : "fail" %>">
+        Result: <%= result %>
+    </h3>
+
+    <hr>
+
+
+    <p>Q1: New Delhi | Your Ans: <%= q1 %></p>
+    <p>Q2: Mahatma Gandhi | Your Ans: <%= q2 %></p>
+    <p>Q3: Jupiter | Your Ans: <%= q3 %></p>
+    <p>Q4: Alexander Graham Bell | Your Ans: <%= q4 %></p>
+    <p>Q5: Nile | Your Ans: <%= q5 %></p>
+    <p>Q6: 2019 | Your Ans: <%= q6 %></p>
+    <p>Q7: Fiji | Your Ans: <%= q7 %></p>
+    <p>Q8: Department of Research and Development Laboratory | Your Ans: <%= q8 %></p>
+    <p>Q9: Uranus | Your Ans: <%= q9 %></p>
+    <p>Q10: Dr A.P.J. Abdul Kalam | Your Ans: <%= q10 %></p>
+    
+      
+	<form action="leaderboard.jsp">
+		   <button>Check Leaderboard</button>	
+	</form>
+	
+    <form action="certificate.jsp">
+        <button>Download Certificate</button>
+         <%
+       }
+	catch(Exception e)
+	{
+		System.out.println(e);
+	} %>
+    </form>
+</div>
+
+</body>
+</html>
