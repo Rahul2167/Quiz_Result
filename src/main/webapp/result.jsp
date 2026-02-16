@@ -72,10 +72,12 @@
                 String dbName = System.getenv("DB_NAME");
                 String user = System.getenv("DB_USER");
                 String password = System.getenv("DB_PASSWORD");
+                String port = System.getenv("DB_PORT");
 
                 String url;
                 if (host != null && dbName != null) {
-                url = "jdbc:postgresql://" + host + ":5432/" + dbName;
+                if (port == null) port = "5432";
+                url = "jdbc:postgresql://" + host + ":" + port + "/" + dbName + "?sslmode=require";
                 } else if (bucketUrl != null) {
                 url = bucketUrl;
                 } else {
