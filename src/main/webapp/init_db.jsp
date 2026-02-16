@@ -9,19 +9,19 @@
 
         <body>
             <h1>🔧 Database Initialization</h1>
-            <%! // Helper to parse psql command if provided as a URL public String parsePsql(String psql) { if
+            <%! /* Helper to parse psql command if provided as a URL */ public String parsePsql(String psql) { if
                 (psql==null || !psql.trim().startsWith("psql")) return null; String host=null, port="5432" ,
                 db="postgres" ; String[] parts=psql.split("\\s+"); for (int i=0; i < parts.length; i++) { if
                 (("-h".equals(parts[i]) || "--host" .equals(parts[i])) && i + 1 < parts.length) host=parts[i+1]; if
                 (("-p".equals(parts[i]) || "--port" .equals(parts[i])) && i + 1 < parts.length) port=parts[i+1]; if
                 (("-d".equals(parts[i]) || "--dbname" .equals(parts[i])) && i + 1 < parts.length) db=parts[i+1]; }
                 return host !=null ? "jdbc:postgresql://" + host + ":" + port + "/" + db : null; } %>
-                <% String dbUrl=System.getenv("DB_URL"); String urlVar=System.getenv("URL"); String
+                <% String dbUrl=System.getenv("DB_URL"); String urlVarArr=System.getenv("URL"); String
                     databaseUrl=System.getenv("DATABASE_URL"); String host=System.getenv("DB_HOST"); String
                     port=System.getenv("DB_PORT"); String dbName=System.getenv("DB_NAME"); String
                     user=System.getenv("DB_USER"); String pass=System.getenv("DB_PASSWORD"); if (user==null)
-                    user="postgres" ; if (pass==null) pass="Rahul@2167" ; // List of strategies to try
-                    java.util.List<String[]> strategies = new java.util.ArrayList<>();
+                    user="postgres" ; if (pass==null) pass="Rahul@2167" ; /* List of strategies to try */
+                    java.util.List<String[]> strategies = new java.util.ArrayList<String[]>();
 
                         // Strategy 1: Primary Host/Name configuration with current port
                         if (host != null && dbName != null) {
@@ -41,23 +41,18 @@
                         }
 
                         // Strategy 3: Try provided URL variables
-                        String[] urlVars = { dbUrl, urlVar, databaseUrl };
+                        String[] urlVars = { dbUrl, urlVarArr, databaseUrl };
                         for (String v : urlVars) {
                         if (v == null || v.trim().isEmpty()) continue;
-                        String parsed = v;
-                        if (v.trim().startsWith("psql")) {
-                        parsed = parsePsql(v);
-                        } else if (v.startsWith("postgres://")) {
-                        parsed = "jdbc:postgresql" + v.substring(8);
-                        }
+                        String vTrim = v.trim();
+                        String parsed = vTrim.startsWith("psql") ? parsePsql(vTrim) : (vTrim.startsWith("postgres://") ?
+                        "jdbc:postgresql" + vTrim.substring(8) : vTrim);
 
                         if (parsed != null) {
-                        if (!parsed.contains("?")) {
-                        strategies.add(new String[]{ parsed + "?sslmode=require", "Variable URL (SSL)" });
-                        strategies.add(new String[]{ parsed, "Variable URL (No SSL)" });
-                        } else {
+                        String sslUrl = parsed + (parsed.contains("?") ? (parsed.contains("sslmode") ? "" :
+                        "&sslmode=require") : "?sslmode=require");
+                        strategies.add(new String[]{ sslUrl, "Variable URL (SSL)" });
                         strategies.add(new String[]{ parsed, "Variable URL (As-is)" });
-                        }
                         }
                         }
 
@@ -81,11 +76,13 @@
                             try {
                             Class.forName("org.postgresql.Driver");
                             con = DriverManager.getConnection(attemptUrl, user, pass);
+                            if (con != null) {
                             successfulStrategy = attemptName;
                             finalUrl = attemptUrl;
                             diagnosticLog.append("<li style='color: green;'>✅ <strong>SUCCESS:</strong> " + attemptName
                                 + "</li>");
                             break;
+                            }
                             } catch (Exception e) {
                             diagnosticLog.append("<li style='color: #666;'>❌ " + attemptName + ": " + e.getMessage() + "
                             </li>");
@@ -105,8 +102,8 @@
                             out.println("</div>");
 
                         if (con != null) {
+                        try {
                         Statement stmt = con.createStatement();
-
                         out.println("<div style='background: #fff3cd; padding: 15px; margin: 20px; border-radius: 5px;'>
                             ");
                             out.println("<h3>✅ Database Connected Successfully!</h3>");
@@ -129,8 +126,18 @@
                             out.println("<p style='margin: 10px 0 0 0;'>Table 'quiz_result' has been created/verified
                                 successfully.</p>");
                             out.println("</div>");
-
+                        } finally {
                         con.close();
+                        }
+                        } else {
+                        out.println("<div
+                            style='background: #f8d7da; padding: 15px; margin: 20px; border-radius: 5px; border-left: 5px solid red;'>
+                            ");
+                            out.println("<h2 style='color: red; margin: 0;'>❌ Connection Error:</h2>");
+                            out.println("<p style='margin: 10px 0;'><strong>All connection strategies failed.</strong>
+                            </p>");
+                            out.println("</div>");
+                        }
                         } catch (Exception e) {
                         out.println("<div
                             style='background: #f8d7da; padding: 15px; margin: 20px; border-radius: 5px; border-left: 5px solid red;'>
@@ -139,8 +146,8 @@
                             out.println("<p style='margin: 10px 0;'><strong>" + e.getMessage() + "</strong></p>");
                             out.println("
                             <pre style='background: #fff; padding: 10px; overflow: auto;'>");
-                    e.printStackTrace(new java.io.PrintWriter(out));
-                    out.println("</pre>");
+    e.printStackTrace(new java.io.PrintWriter(out));
+    out.println("</pre>");
                             out.println("
                         </div>");
                         }

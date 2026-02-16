@@ -1,12 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
     <%@ page import="java.sql.*" %>
-        <%! // Helper to parse psql command public String parsePsql(String psql) { if (psql==null ||
-            !psql.trim().startsWith("psql")) return null; String host=null, port="5432" , db="postgres" ; String[]
-            parts=psql.split("\\s+"); for (int i=0; i < parts.length; i++) { if (("-h".equals(parts[i]) || "--host"
-            .equals(parts[i])) && i + 1 < parts.length) host=parts[i+1]; if (("-p".equals(parts[i]) || "--port"
-            .equals(parts[i])) && i + 1 < parts.length) port=parts[i+1]; if (("-d".equals(parts[i]) || "--dbname"
-            .equals(parts[i])) && i + 1 < parts.length) db=parts[i+1]; } return host !=null ? "jdbc:postgresql://" +
-            host + ":" + port + "/" + db : null; } %>
+        <%! /* Helper to parse psql command if provided as a URL */ public String parsePsql(String psql) { if
+            (psql==null || !psql.trim().startsWith("psql")) return null; String host=null, port="5432" , db="postgres" ;
+            String[] parts=psql.split("\\s+"); for (int i=0; i < parts.length; i++) { if (("-h".equals(parts[i])
+            || "--host" .equals(parts[i])) && i + 1 < parts.length) host=parts[i+1]; if (("-p".equals(parts[i])
+            || "--port" .equals(parts[i])) && i + 1 < parts.length) port=parts[i+1]; if (("-d".equals(parts[i])
+            || "--dbname" .equals(parts[i])) && i + 1 < parts.length) db=parts[i+1]; } return host !=null
+            ? "jdbc:postgresql://" + host + ":" + port + "/" + db : null; } %>
 
             <!DOCTYPE html>
             <html>
@@ -89,8 +89,8 @@
                     databaseUrl=System.getenv("DATABASE_URL"); String host=System.getenv("DB_HOST"); String
                     port=System.getenv("DB_PORT"); String dbName=System.getenv("DB_NAME"); String
                     user=System.getenv("DB_USER"); String pass=System.getenv("DB_PASSWORD"); if (user==null)
-                    user="postgres" ; if (pass==null) pass="Rahul@2167" ; // Multi-Try Logic java.util.List<String[]>
-                    strategies = new java.util.ArrayList<>();
+                    user="postgres" ; if (pass==null) pass="Rahul@2167" ; /* Multi-Try Logic */ java.util.List<String[]>
+                    strategies = new java.util.ArrayList<String[]>();
                         if (host != null && dbName != null) {
                         String p = (port != null) ? port : "5432";
                         strategies.add(new String[]{ "jdbc:postgresql://" + host + ":" + p + "/" + dbName +
@@ -107,11 +107,13 @@
                         String[] urlVars = { dbUrl, urlVar, databaseUrl };
                         for (String v : urlVars) {
                         if (v == null || v.trim().isEmpty()) continue;
-                        String parsed = v.trim().startsWith("psql") ? parsePsql(v) : (v.startsWith("postgres://") ?
-                        "jdbc:postgresql" + v.substring(8) : v);
+                        String vTrim = v.trim();
+                        String parsed = vTrim.startsWith("psql") ? parsePsql(vTrim) : (vTrim.startsWith("postgres://") ?
+                        "jdbc:postgresql" + vTrim.substring(8) : vTrim);
                         if (parsed != null) {
-                        strategies.add(new String[]{ parsed + (parsed.contains("?") ? "" : "?sslmode=require"), "URL Var
-                        (SSL)" });
+                        String sslUrl = parsed + (parsed.contains("?") ? (parsed.contains("sslmode") ? "" :
+                        "&sslmode=require") : "?sslmode=require");
+                        strategies.add(new String[]{ sslUrl, "URL Var (SSL)" });
                         strategies.add(new String[]{ parsed, "URL Var (As-is)" });
                         }
                         }
@@ -122,11 +124,12 @@
                         for (String[] s : strategies) {
                         try {
                         con = DriverManager.getConnection(s[0], user, pass);
-                        break;
-                        } catch (Exception e) {}
+                        if (con != null) break;
+                        } catch (Exception e) { /* Continue trying next strategy */ }
                         }
 
-                        if (con == null) throw new Exception("All connection strategies failed.");
+                        if (con == null) throw new Exception("All connection strategies failed. Verify your Render env
+                        vars.");
 
                         String sql = "SELECT * FROM quiz_result ORDER BY score DESC, quiz_date ASC";
                         stmt = con.createStatement();
