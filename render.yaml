@@ -6,14 +6,25 @@ services:
     region: singapore
     envVars:
       - key: DB_HOST
-        value: aws-1-ap-southeast-1.pooler.supabase.com
+        fromDatabase:
+          name: quiz-db
+          property: host
       - key: DB_NAME
-        value: postgres
+        fromDatabase:
+          name: quiz-db
+          property: database
       - key: DB_USER
-        value: postgres.ojixfqxwtqutcelrzwmd
+        fromDatabase:
+          name: quiz-db
+          property: user
       - key: DB_PASSWORD
-        value: Rahul216746
-      - key: DB_PORT
-        value: 6543
-      - key: JAVA_OPTS
-        value: -Djava.security.egd=file:/dev/./urandom
+        fromDatabase:
+          name: quiz-db
+          property: password
+
+databases:
+  - name: quiz-db
+    plan: free
+    region: singapore
+    databaseName: student
+    user: rahul

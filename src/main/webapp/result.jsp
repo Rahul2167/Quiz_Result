@@ -56,52 +56,53 @@
                 session.getAttribute("q7"); String q8=(String) session.getAttribute("q8"); String q9=(String)
                 session.getAttribute("q9"); String q10=(String) session.getAttribute("q10"); /* Calculate Score */ int
                 score=0; if ("New Delhi".equals(q1)) score++; if ("Mahatma Gandhi".equals(q2)) score++; if
-                ("Jupiter".equals(q3)) score++; String ans4="Alexander Graham Bell" ; if (ans4.equals(q4)) score++; if
-                ("Nile".equals(q5)) score++; if ("2019".equals(q6)) score++; if ("Fiji".equals(q7)) score++; String
+                ("Jupiter".equals(q3)) score++; if ("Alexander Graham Bell".equals(q4)) score++; if ("Nile".equals(q5))
+                score++; if ("2019".equals(q6)) score++; if ("Fiji".equals(q7)) score++; String
                 ans8="Department of Research and Development Laboratory" ; if (ans8.equals(q8)) score++; if
                 ("Uranus".equals(q9)) score++; if ("Dr A.P.J. Abdul Kalam".equals(q10)) score++; String
                 resultVal=(score>= 6) ? "PASS" : "FAIL";
 
                 /* Database Connection */
                 String errorMsg = null;
+                Connection con = null;
                 try {
-                Connection con;
-
                 String bucketUrl = System.getenv("DB_URL");
                 String host = System.getenv("DB_HOST");
                 String dbName = System.getenv("DB_NAME");
                 String user = System.getenv("DB_USER");
                 String password = System.getenv("DB_PASSWORD");
-                String port = System.getenv("DB_PORT");
 
                 String url;
                 if (host != null && dbName != null) {
-                if (port == null) port = "5432";
-                url = "jdbc:postgresql://" + host + ":" + port + "/" + dbName + "?sslmode=require&prepareThreshold=0";
+                url = "jdbc:postgresql://" + host + ":5432/" + dbName;
                 } else if (bucketUrl != null) {
                 url = bucketUrl;
                 } else {
                 url = "jdbc:postgresql://localhost:5432/student";
                 }
 
-                if (user == null) user = "postgres.ojixfqxwtqutcelrzwmd";
-                if (password == null) password = "Rahul216746";
+                if (user == null) user = "postgres";
+                if (password == null) password = "Rahul@2167";
 
                 Class.forName("org.postgresql.Driver");
                 con = DriverManager.getConnection(url, user, password);
 
                 PreparedStatement ps = con.prepareStatement(
-                "INSERT INTO quiz_result(fullname,score,result) VALUES (?,?,?)");
+                "INSERT INTO quiz_result(fullname, score, result) VALUES (?, ?, ?)"
+                );
 
                 ps.setString(1, name);
                 ps.setInt(2, score);
                 ps.setString(3, resultVal);
 
                 ps.executeUpdate();
-                con.close();
                 } catch(Exception e) {
                 System.out.println("DB Error: " + e);
                 errorMsg = "Database Error: " + e.getMessage();
+                } finally {
+                if (con != null) {
+                try { con.close(); } catch (SQLException se) { se.printStackTrace(); }
+                }
                 }
                 %>
 

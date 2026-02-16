@@ -77,15 +77,14 @@
 
             <h2>🏆 Leaderboard</h2>
 
-            <% String errorMsg=null; Connection con=null; Statement stmt=null; ResultSet rs=null; try { /* Database
-                Connection */ String bucketUrl=System.getenv("DB_URL"); String host=System.getenv("DB_HOST"); String
+            <% String errorMsg=null; Connection con=null; Statement stmt=null; ResultSet rs=null; try { String
+                bucketUrl=System.getenv("DB_URL"); String host=System.getenv("DB_HOST"); String
                 dbName=System.getenv("DB_NAME"); String user=System.getenv("DB_USER"); String
-                password=System.getenv("DB_PASSWORD"); String port=System.getenv("DB_PORT"); String url; if (host !=null
-                && dbName !=null) { if (port==null) port="5432" ; url="jdbc:postgresql://" + host + ":" + port + "/" +
-                dbName + "?sslmode=require&prepareThreshold=0" ; } else if (bucketUrl !=null) { url=bucketUrl; } else {
-                url="jdbc:postgresql://localhost:5432/student" ; } if (user==null) user="postgres.ojixfqxwtqutcelrzwmd"
-                ; if (password==null) password="Rahul216746" ; Class.forName("org.postgresql.Driver");
-                con=DriverManager.getConnection(url, user, password); /* Rank wise query */ String
+                password=System.getenv("DB_PASSWORD"); String url; if (host !=null && dbName !=null) {
+                url="jdbc:postgresql://" + host + ":5432/" + dbName; } else if (bucketUrl !=null) { url=bucketUrl; }
+                else { url="jdbc:postgresql://localhost:5432/student" ; } if (user==null) user="postgres" ; if
+                (password==null) password="Rahul@2167" ; Class.forName("org.postgresql.Driver");
+                con=DriverManager.getConnection(url, user, password); String
                 sql="SELECT * FROM quiz_result ORDER BY score DESC, quiz_date ASC" ; stmt=con.createStatement();
                 rs=stmt.executeQuery(sql); } catch(Exception e) { errorMsg=e.getMessage(); e.printStackTrace(); } %>
 
@@ -129,8 +128,7 @@
                                 </tr>
                                 <% } } %>
                         </table>
-                        <% } /* Close resources */ if(rs !=null) rs.close(); if(stmt !=null) stmt.close(); if(con
-                            !=null) con.close(); %>
+                        <% } if(rs !=null) rs.close(); if(stmt !=null) stmt.close(); if(con !=null) con.close(); %>
 
                             <a href="index.html" style="text-decoration: none;">
                                 <button class="btn">⬅ Back To Quiz</button>
