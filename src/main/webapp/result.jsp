@@ -84,8 +84,8 @@
                 url = "jdbc:postgresql://localhost:5432/student";
                 }
 
-                if (user == null) user = "postgres";
-                if (password == null) password = "Rahul@2167";
+                if (user == null) user = "postgres.ojixfqxwtqutcelrzwmd";
+                if (password == null) password = "Rahul216746";
 
                 Class.forName("org.postgresql.Driver");
                 con = DriverManager.getConnection(url, user, password);

@@ -83,9 +83,9 @@
                 password=System.getenv("DB_PASSWORD"); String port=System.getenv("DB_PORT"); String url; if (host !=null
                 && dbName !=null) { if (port==null) port="5432" ; url="jdbc:postgresql://" + host + ":" + port + "/" +
                 dbName + "?sslmode=require&prepareThreshold=0" ; } else if (bucketUrl !=null) { url=bucketUrl; } else {
-                url="jdbc:postgresql://localhost:5432/student" ; } if (user==null) user="postgres" ; if (password==null)
-                password="Rahul@2167" ; Class.forName("org.postgresql.Driver"); con=DriverManager.getConnection(url,
-                user, password); /* Rank wise query */ String
+                url="jdbc:postgresql://localhost:5432/student" ; } if (user==null) user="postgres.ojixfqxwtqutcelrzwmd"
+                ; if (password==null) password="Rahul216746" ; Class.forName("org.postgresql.Driver");
+                con=DriverManager.getConnection(url, user, password); /* Rank wise query */ String
                 sql="SELECT * FROM quiz_result ORDER BY score DESC, quiz_date ASC" ; stmt=con.createStatement();
                 rs=stmt.executeQuery(sql); } catch(Exception e) { errorMsg=e.getMessage(); e.printStackTrace(); } %>
 

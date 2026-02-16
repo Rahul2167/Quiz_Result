@@ -27,8 +27,9 @@
                 if (host != null && dbName != null) { if (port==null) port="5432" ; url="jdbc:postgresql://" + host +
                 ":" + port + "/" +
                 dbName + "?sslmode=require&prepareThreshold=0" ; } else if (bucketUrl !=null) { url=bucketUrl; } else {
-                url="jdbc:postgresql://localhost:5432/student" ; } if (user==null) user="postgres" ; if (password==null)
-                password="Rahul@2167" ; Class.forName("org.postgresql.Driver"); Connection
+                url="jdbc:postgresql://localhost:5432/student" ; } if (user==null) user="postgres.ojixfqxwtqutcelrzwmd"
+                ; if (password==null)
+                password="Rahul216746" ; Class.forName("org.postgresql.Driver"); Connection
                 con=DriverManager.getConnection(url, user, password); Statement stmt=con.createStatement(); String
                 sql="CREATE TABLE IF NOT EXISTS quiz_result (" + "id SERIAL PRIMARY KEY, " + "fullname VARCHAR(255), "
                 + "score INT, " + "result VARCHAR(50), " + "quiz_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP" + ")" ;
