@@ -77,7 +77,7 @@
                 String url;
                 if (host != null && dbName != null) {
                 if (port == null) port = "5432";
-                url = "jdbc:postgresql://" + host + ":" + port + "/" + dbName + "?sslmode=require";
+                url = "jdbc:postgresql://" + host + ":" + port + "/" + dbName + "?sslmode=require&prepareThreshold=0";
                 } else if (bucketUrl != null) {
                 url = bucketUrl;
                 } else {

@@ -82,7 +82,7 @@
                 dbName=System.getenv("DB_NAME"); String user=System.getenv("DB_USER"); String
                 password=System.getenv("DB_PASSWORD"); String port=System.getenv("DB_PORT"); String url; if (host !=null
                 && dbName !=null) { if (port==null) port="5432" ; url="jdbc:postgresql://" + host + ":" + port + "/" +
-                dbName + "?sslmode=require" ; } else if (bucketUrl !=null) { url=bucketUrl; } else {
+                dbName + "?sslmode=require&prepareThreshold=0" ; } else if (bucketUrl !=null) { url=bucketUrl; } else {
                 url="jdbc:postgresql://localhost:5432/student" ; } if (user==null) user="postgres" ; if (password==null)
                 password="Rahul@2167" ; Class.forName("org.postgresql.Driver"); con=DriverManager.getConnection(url,
                 user, password); /* Rank wise query */ String
