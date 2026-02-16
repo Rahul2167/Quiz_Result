@@ -5,8 +5,8 @@
             parts=t.split("\\s+"); for (int i=0; i < parts.length; i++) { if (("-h".equals(parts[i]) || "--host"
             .equals(parts[i])) && i + 1 < parts.length) host=parts[i+1]; if (("-p".equals(parts[i]) || "--port"
             .equals(parts[i])) && i + 1 < parts.length) port=parts[i+1]; if (("-d".equals(parts[i]) || "--dbname"
-            .equals(parts[i])) && i + 1 < parts.length) db=parts[i+1]; } return host !=null ? "jdbc:postgresql://" +
-            host + ":" + port + "/" + db : null; } %>
+            .equals(parts[i])) && i + 1 < parts.length) db=parts[i+1]; } if (host==null) return null;
+            return "jdbc:postgresql://" + host + ":" + port + "/" + db; } %>
             <!DOCTYPE html>
             <html>
 
@@ -24,62 +24,50 @@
                         if (host != null && dbName != null) {
                         String p = (port != null) ? port : "5432";
                         strategies.add(new String[]{ "jdbc:postgresql://" + host + ":" + p + "/" + dbName +
-                        "?sslmode=require", "Primary (SSL)" });
-                        strategies.add(new String[]{ "jdbc:postgresql://" + host + ":" + p + "/" + dbName, "Primary (No
-                        SSL)" });
+                        "?sslmode=require", "Primary_SSL" });
+                        strategies.add(new String[]{ "jdbc:postgresql://" + host + ":" + p + "/" + dbName,
+                        "Primary_NoSSL" });
                         if ("6543".equals(p)) {
                         strategies.add(new String[]{ "jdbc:postgresql://" + host + ":5432/" + dbName +
-                        "?sslmode=require", "Host + 5432 (SSL)" });
-                        strategies.add(new String[]{ "jdbc:postgresql://" + host + ":5432/" + dbName, "Host + 5432 (No
-                        SSL)" });
+                        "?sslmode=require", "Port5432_SSL" });
+                        strategies.add(new String[]{ "jdbc:postgresql://" + host + ":5432/" + dbName, "Port5432_NoSSL"
+                        });
                         }
                         }
-                        String[] vars = { dbUrl, urlVar };
-                        for (String v : vars) {
+                        String[] vList = { dbUrl, urlVar };
+                        for (String v : vList) {
                         if (v == null || v.trim().isEmpty()) continue;
                         String vt = v.trim();
                         String pURL = vt.startsWith("psql") ? parsePsql(vt) : (vt.startsWith("postgres://") ?
                         "jdbc:postgresql" + vt.substring(8) : vt);
                         if (pURL != null) {
-                        strategies.add(new String[]{ pURL + (pURL.contains("?") ? "" : "?sslmode=require"), "URL Var
-                        (SSL)" });
-                        strategies.add(new String[]{ pURL, "URL Var (As-is)" });
-                        }
-                        }
-                        strategies.add(new String[]{ "jdbc:postgresql://localhost:5432/student", "Localhost Fallback"
+                        strategies.add(new String[]{ pURL + (pURL.contains("?") ? "" : "?sslmode=require"), "URL_SSL"
                         });
-
-                        Connection con = null;
-                        String successfulStrategy = null;
-                        String finalUrl = null;
-                        StringBuilder log = new StringBuilder();
-
-                        out.println("<div style='background:#e3f2fd;padding:15px;margin:20px;border-radius:5px;'>");
-                            out.println("<h3>🔍 Connection Strategist</h3>
+                        strategies.add(new String[]{ pURL, "URL_AsIs" });
+                        }
+                        }
+                        strategies.add(new String[]{ "jdbc:postgresql://localhost:5432/student", "Local" });
+                        Connection con = null; String sucStrategy = null; String fURL = null; StringBuilder log = new
+                        StringBuilder();
+                        out.println("<div style='background:#e3f2fd;padding:15px;margin:20px;border-radius:5px;'>
+                            <h3>🔍 Connection Strategist</h3>
                             <ul>");
-
                                 for (String[] s : strategies) {
                                 try {
                                 Class.forName("org.postgresql.Driver");
                                 con = DriverManager.getConnection(s[0], user, pass);
                                 if (con != null) {
-                                successfulStrategy = s[1]; finalUrl = s[0];
+                                sucStrategy = s[1]; fURL = s[0];
                                 log.append("<li style='color:green;'>✅ SUCCESS: " + s[1] + "</li>");
                                 break;
                                 }
-                                } catch (Exception e) {
-                                log.append("<li style='color:#666;'>❌ " + s[1] + ": " + e.getMessage() + "</li>");
-                                }
+                                } catch (Exception e) { log.append("<li style='color:#666;'>❌ " + s[1] + ": " +
+                                    e.getMessage() + "</li>"); }
                                 }
                                 out.println(log.toString() + "</ul>");
-
                             if (con != null) {
                             out.println("<div style='background:#d4edda;color:#155724;padding:10px;border-radius:5px;'>
-                                ");
-                                out.println("<strong>✓ Connected using:</strong> " + successfulStrategy + "<br>");
-                                out.println("<small>Final URL: " + finalUrl.replaceAll(":.*@", ":***@") + "</small>
-                            </div>");
-
+                                <strong>Connected:</strong> " + sucStrategy + "</div>");
                             Statement stmt = con.createStatement();
                             String sql = "CREATE TABLE IF NOT EXISTS quiz_result (id SERIAL PRIMARY KEY, fullname
                             VARCHAR(255), score INT, result VARCHAR(50), quiz_date TIMESTAMP DEFAULT
@@ -93,12 +81,8 @@
                             }
                             out.println("
                         </div>");
-                        } catch (Exception e) {
-                        out.println("<div style='color:red;'>
-                            <h2>❌ Error:</h2>
-                            <pre>" + e.getMessage() + "</pre>
-                        </div>");
-                        }
+                        } catch (Exception e) { out.println("<div style='color:red;'>Error: " + e.getMessage() + "</div>
+                        "); }
                         %>
                         <a href="index.html">Go to Home</a>
             </body>
