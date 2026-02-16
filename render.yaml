@@ -6,11 +6,11 @@ services:
     region: singapore
     envVars:
       - key: DB_HOST
-        value: db.ojixfqxwtqutcelrzwmd.supabase.co
+        value: aws-0-ap-south-1.pooler.supabase.com
       - key: DB_NAME
         value: postgres
       - key: DB_USER
-        value: postgres
+        value: postgres.ojixfqxwtqutcelrzwmd
       - key: DB_PASSWORD
         value: Rahul216746
       - key: DB_PORT
