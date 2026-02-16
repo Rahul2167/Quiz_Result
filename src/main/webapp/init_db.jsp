@@ -19,8 +19,14 @@
                 con=DriverManager.getConnection(url, user, password); Statement stmt=con.createStatement(); String
                 sql="CREATE TABLE IF NOT EXISTS quiz_result (" + "id SERIAL PRIMARY KEY, " + "fullname VARCHAR(255), "
                 + "score INT, " + "result VARCHAR(50), " + "quiz_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP" + ")" ;
-                stmt.executeUpdate(sql); out.println("<h2 style='color:green'>Success! Table 'quiz_result' is ready.
-                </h2>");
+                stmt.executeUpdate(sql); /* Insert sample data if empty */ ResultSet countRs=stmt.executeQuery("SELECT
+                COUNT(*) FROM quiz_result"); countRs.next(); if (countRs.getInt(1)==0) { stmt.executeUpdate("INSERT INTO
+                quiz_result (fullname, score, result) VALUES ('Sample User', 8, 'PASS' )"); out.println("<h3>Inserted
+                sample data.</h3>");
+                }
+
+                out.println("<h2 style='color:green'>Success! Database Connection OK. Table 'quiz_result' is ready.</h2>
+                ");
                 con.close();
                 } catch (Exception e) {
                 out.println("<h2 style='color:red'>Error: " + e.getMessage() + "</h2>");
