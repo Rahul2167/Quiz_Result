@@ -9,23 +9,60 @@
 
         <body>
             <h1>🔧 Database Initialization</h1>
-            <% String bucketUrl=System.getenv("DB_URL"); if (bucketUrl==null) bucketUrl=System.getenv("URL"); if
-                (bucketUrl==null) bucketUrl=System.getenv("DATABASE_URL"); String host=System.getenv("DB_HOST"); String
-                port=System.getenv("DB_PORT"); if (port==null) port="5432" ; String dbName=System.getenv("DB_NAME");
-                String user=System.getenv("DB_USER"); String password=System.getenv("DB_PASSWORD"); String url; if (host
-                !=null && dbName !=null) { url="jdbc:postgresql://" + host + ":" + port + "/" + dbName
-                + "?sslmode=require" ; } else if (bucketUrl !=null) { // Convert postgres:// to jdbc:postgresql:// if
-                necessary url=bucketUrl; if (url.startsWith("postgres://")) { url="jdbc:postgresql" + url.substring(8);
-                } if (!url.contains("?")) { url +="?sslmode=require" ; } else if (!url.contains("sslmode")) { url
-                +="&sslmode=require" ; } } else { url="jdbc:postgresql://localhost:5432/student" ; } if (user==null)
-                user="postgres" ; if (password==null) password="Rahul@2167" ; try { out.println("<div
+            <% String dbUrl=System.getenv("DB_URL"); String urlVar=System.getenv("URL"); String
+                databaseUrl=System.getenv("DATABASE_URL"); String host=System.getenv("DB_HOST"); String
+                port=System.getenv("DB_PORT"); String dbName=System.getenv("DB_NAME"); String
+                user=System.getenv("DB_USER"); String password=System.getenv("DB_PASSWORD"); // Determine which variable
+                to use String bucketUrl=dbUrl !=null ? dbUrl : (urlVar !=null ? urlVar : databaseUrl); String url;
+                String connectionSource; if (host !=null && dbName !=null) { if (port==null) port="5432" ;
+                url="jdbc:postgresql://" + host + ":" + port + "/" + dbName + "?sslmode=require" ;
+                connectionSource="HOST/NAME/PORT (Manual or Render Managed)" ; } else if (bucketUrl !=null) {
+                url=bucketUrl; if (url.startsWith("postgres://")) { url="jdbc:postgresql" + url.substring(8); } else if
+                (url.startsWith("psql ")) {
+                        // Diagnostic: The user might have pasted a psql command instead of a URL
+                        url = " INVALID_URL_PSQL_COMMAND"; } if (!url.equals("INVALID_URL_PSQL_COMMAND")) { if
+                (!url.contains("?")) url +="?sslmode=require" ; else if (!url.contains("sslmode")) url
+                +="&sslmode=require" ; } connectionSource="DB_URL/URL/DATABASE_URL Variable" ; } else {
+                url="jdbc:postgresql://localhost:5432/student" ; connectionSource="Local Fallback (localhost)" ; } if
+                (user==null) user="postgres" ; if (password==null) password="Rahul@2167" ; try { out.println("<div
                 style='background: #e3f2fd; padding: 15px; margin: 20px; border-radius: 5px;'>");
-                out.println("<h3>📋 Connection Details:</h3>");
-                out.println("<p><strong>Host:</strong> " + (host != null ? host : "Not Set") + "</p>");
-                out.println("<p><strong>Port:</strong> " + port + "</p>");
-                out.println("<p><strong>DB Name:</strong> " + (dbName != null ? dbName : "Not Set") + "</p>");
-                out.println("<p><strong>Final URL (masked):</strong> " + url.replaceAll(":.*@", ":***@") + "</p>");
-                out.println("<p><strong>User:</strong> " + user + "</p>");
+                out.println("<h3>📋 Diagnostic Information:</h3>");
+                out.println("<p><strong>Detected Connection Source:</strong> " + connectionSource + "</p>");
+                out.println("
+                <hr>");
+                out.println("<p><strong>DB_HOST:</strong> " + (host != null ? "<code>" + host + "</code>" : "<span
+                        style='color:orange'>Not Set</span>") + "</p>");
+                out.println("<p><strong>DB_PORT:</strong> " + (System.getenv("DB_PORT") != null ?
+                    "<code>" + System.getenv("DB_PORT") + "</code>" : "<span style='color:gray'>Not Set (Defaulting to
+                        5432)</span>") + "</p>");
+                out.println("<p><strong>DB_NAME:</strong> " + (dbName != null ? "<code>" + dbName + "</code>" : "<span
+                        style='color:orange'>Not Set</span>") + "</p>");
+                out.println("<p><strong>URL Variable:</strong> " + (urlVar != null ?
+                    "<code>" + (urlVar.length() > 20 ? urlVar.substring(0, 20) + "..." : urlVar) + "</code>" : "<span
+                        style='color:gray'>Not Set</span>") + "</p>");
+                out.println("
+                <hr>");
+                out.println("<p><strong>Final JDBC URL (masked):</strong>
+                    <code>" + url.replaceAll(":.*@", ":***@") + "</code></p>");
+                out.println("<p><strong>DB User:</strong> <code>" + user + "</code></p>");
+
+                if (url.equals("INVALID_URL_PSQL_COMMAND")) {
+                out.println("<div
+                    style='background: #fff3cd; padding: 10px; border-left: 5px solid #ffc107; margin-top: 10px;'>");
+                    out.println("<strong>⚠️ WARNING:</strong> Your 'URL' variable looks like a <code>psql</code> command
+                    (starts with 'psql'). Java needs a JDBC URL (e.g.,
+                    <code>jdbc:postgresql://host:port/dbname</code>).");
+                    out.println("</div>");
+                }
+
+                if (host != null && host.contains("render.com") && "6543".equals(port)) {
+                out.println("<div
+                    style='background: #fff3cd; padding: 10px; border-left: 5px solid #ffc107; margin-top: 10px;'>");
+                    out.println("<strong>⚠️ POTENTIAL MISMATCH:</strong> You are using a Render host with Port 6543.
+                    Port 6543 is usually for Supabase Pooler. Render internal databases normally use 5432.");
+                    out.println("</div>");
+                }
+
                 out.println("</div>");
 
                 Class.forName("org.postgresql.Driver");
