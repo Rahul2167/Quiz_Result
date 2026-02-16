@@ -4,11 +4,11 @@
 
     <head>
         <meta charset="UTF-8">
-        <title>Certificate of Completion</title>
+        <title>Certificate</title>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
         <style>
             body {
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                font-family: 'Segoe UI', Arial;
                 background: #f0f2f5;
                 display: flex;
                 justify-content: center;
@@ -17,270 +17,94 @@
                 margin: 0;
             }
 
-            #certificate {
+            #cert {
                 width: 800px;
                 padding: 40px;
                 background: #fff;
                 border: 10px solid #243b55;
                 text-align: center;
-                position: relative;
                 box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             }
 
-            .header {
+            .h {
                 font-size: 40px;
                 font-weight: bold;
                 color: #243b55;
-                margin-bottom: 10px;
-                text-transform: uppercase;
-                letter-spacing: 2px;
-            }
-
-            .sub-header {
-                font-size: 20px;
-                color: #555;
                 margin-bottom: 30px;
             }
 
-            .name {
+            .n {
                 font-size: 32px;
                 font-weight: bold;
                 color: #d4af37;
                 border-bottom: 2px solid #ddd;
-                display: inline-block;
-                padding-bottom: 5px;
-                margin: 10px 0 30px 0;
+                padding: 10px;
+                margin: 20px 0;
             }
 
-            .score-section {
+            .s {
                 font-size: 24px;
                 margin: 20px 0;
-                color: #333;
             }
 
-            .pass {
+            .p {
                 color: green;
                 font-weight: bold;
             }
 
-            .fail {
+            .f {
                 color: red;
                 font-weight: bold;
             }
 
-            .trophy {
-                font-size: 32px;
-                margin-left: 10px;
-                vertical-align: middle;
-            }
-
-            table {
-                width: 90%;
-                margin: 20px auto;
-                border-collapse: collapse;
-                font-size: 14px;
-                text-align: left;
-            }
-
-            th,
-            td {
-                padding: 8px 12px;
-                border-bottom: 1px solid #ddd;
-            }
-
-            th {
-                background-color: #f8f9fa;
-                color: #243b55;
-            }
-
-            .footer {
-                margin-top: 40px;
-                font-size: 12px;
-                color: #777;
-            }
-
-            #downloadBtn {
+            #dBtn {
                 position: fixed;
                 bottom: 20px;
                 right: 20px;
                 background: #243b55;
                 color: white;
                 border: none;
-                padding: 15px 30px;
+                padding: 15px;
                 border-radius: 5px;
-                font-size: 16px;
                 cursor: pointer;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            }
-
-            #downloadBtn:hover {
-                background: #1a2b3c;
-            }
-
-            @media print {
-                #downloadBtn {
-                    display: none;
-                }
             }
         </style>
     </head>
 
     <body>
-        <% // Retrieve candidate name from session, default to "Guest Candidate" String name=(String)
-            session.getAttribute("f1"); if (name==null) { name="Guest Candidate" ; } // Retrieve answers from session
-            String q1=(String) session.getAttribute("q1"); String q2=(String) session.getAttribute("q2"); String
-            q3=(String) session.getAttribute("q3"); String q4=(String) session.getAttribute("q4"); String q5=(String)
-            session.getAttribute("q5"); String q6=(String) session.getAttribute("q6"); String q7=(String)
-            session.getAttribute("q7"); String q8=(String) session.getAttribute("q8"); String q9=(String)
-            session.getAttribute("q9"); String q10=(String) session.getAttribute("q10"); // Calculate score int score=0;
-            if ("New Delhi".equals(q1)) score++; if ("Mahatma Gandhi".equals(q2)) score++; if ("Jupiter".equals(q3))
-            score++; if ("Alexander Graham Bell".equals(q4)) score++; if ("Nile".equals(q5)) score++; if
-            ("2019".equals(q6)) score++; if ("Fiji".equals(q7)) score++; String
-            ans8="Department of Research and Development Laboratory" ; if (ans8.equals(q8)) score++; if
-            ("Uranus".equals(q9)) score++; if ("Dr A.P.J. Abdul Kalam".equals(q10)) score++; String result=(score>= 6) ?
-            "PASS" : "FAIL";
-            String resultClass = (score >= 6) ? "pass" : "fail";
-
-            // Note: certificate.jsp doesn't seem to connect to DB directly, it uses session data.
-            // But I'll ensure any future DB logic here follows the same pattern if added.
+        <% String n=(String)session.getAttribute("f1"); if (n==null) n="Guest" ; String
+            q1=(String)session.getAttribute("q1"); String q2=(String)session.getAttribute("q2"); String
+            q3=(String)session.getAttribute("q3"); String q4=(String)session.getAttribute("q4"); String
+            q5=(String)session.getAttribute("q5"); String q6=(String)session.getAttribute("q6"); String
+            q7=(String)session.getAttribute("q7"); String q8=(String)session.getAttribute("q8"); String
+            q9=(String)session.getAttribute("q9"); String q10=(String)session.getAttribute("q10"); int sc=0; if ("New
+            Delhi".equals(q1)) sc++; if ("Mahatma Gandhi".equals(q2)) sc++; if ("Jupiter".equals(q3)) sc++; if
+            ("Alexander Graham Bell".equals(q4)) sc++; if ("Nile".equals(q5)) sc++; if ("2019".equals(q6)) sc++; if
+            ("Fiji".equals(q7)) sc++; if ("Department of Research and Development Laboratory".equals(q8)) sc++; if
+            ("Uranus".equals(q9)) sc++; if ("Dr A.P.J. Abdul Kalam".equals(q10)) sc++; String rv=(sc>= 6) ? "PASS" :
+            "FAIL";
             %>
-
-            <div id="certificate">
-                <div class="header">Certificate of Completion</div>
-                <div class="sub-header">Online General Knowledge Quiz</div>
-
+            <div id="cert">
+                <div class="h">Certificate of Completion</div>
                 <p>This is to certify that</p>
-                <div class="name">
-                    <%= name %>
+                <div class="n">
+                    <%= n %>
                 </div>
-                <p>has completed the online quiz assessment.</p>
-
-                <div class="score-section">
-                    Score: <b>
-                        <%= score %>/10
-                    </b> <br>
-                    Result:
-                    <span class="<%= resultClass %>">
-                        <%= result %>
-                            <% if (score>= 6) { %>
-                                <span class="trophy">🏆</span>
-                                <% } %>
-                    </span>
-                </div>
-
-                <h3>Candidate Response Sheet</h3>
-                <table>
-                    <tr>
-                        <th>#</th>
-                        <th>Question Keyword</th>
-                        <th>Correct Answer</th>
-                        <th>Your Answer</th>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>Capital of India</td>
-                        <td>New Delhi</td>
-                        <td>
-                            <%= q1 !=null ? q1 : "-" %>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Father of Nation</td>
-                        <td>Mahatma Gandhi</td>
-                        <td>
-                            <%= q2 !=null ? q2 : "-" %>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Largest Planet</td>
-                        <td>Jupiter</td>
-                        <td>
-                            <%= q3 !=null ? q3 : "-" %>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>Telephone Inventor</td>
-                        <td>Alexander Graham Bell</td>
-                        <td>
-                            <%= q4 !=null ? q4 : "-" %>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>5</td>
-                        <td>Longest River</td>
-                        <td>Nile</td>
-                        <td>
-                            <%= q5 !=null ? q5 : "-" %>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>6</td>
-                        <td>Covid Start Year</td>
-                        <td>2019</td>
-                        <td>
-                            <%= q6 !=null ? q6 : "-" %>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>7</td>
-                        <td>Country</td>
-                        <td>Fiji</td>
-                        <td>
-                            <%= q7 !=null ? q7 : "-" %>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>8</td>
-                        <td>DRDL Full Form</td>
-                        <td>Dept. of Research...</td>
-                        <td>
-                            <%= q8 !=null ? q8 : "-" %>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>9</td>
-                        <td>Planet</td>
-                        <td>Uranus</td>
-                        <td>
-                            <%= q9 !=null ? q9 : "-" %>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>10</td>
-                        <td>Missile Man</td>
-                        <td>Dr A.P.J. Abdul Kalam</td>
-                        <td>
-                            <%= q10 !=null ? q10 : "-" %>
-                        </td>
-                    </tr>
-                </table>
-
-                <div class="footer">
-                    Generated on: <%= new java.util.Date() %> <br>
-                        Online Quiz Portal
-                </div>
+                <p>has completed the General Knowledge Quiz.</p>
+                <div class="s">Score: <b>
+                        <%= sc %>/10
+                    </b><br>Result: <span class="<%= rv.equals(" PASS")?"p":"f" %>"><%= rv %></span></div>
+                <p>Generated on: <%= new java.util.Date() %>
+                </p>
             </div>
-
-            <button id="downloadBtn" onclick="downloadPDF()">Download PDF</button>
-
+            <button id="dBtn" onclick="h2p()">Download PDF</button>
             <script>
-        function downloadPDF() {
-            var element = document.getElementById('certificate');
-            var opt = {
-                margin: 10,
-                filename: 'Certificate.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
-            document.getElementById('downloadBtn').style.display = 'none';
-            html2pdf().set(opt).from(element).save().then(function () {
-                document.getElementById('downloadBtn').style.display = 'block';
-            });
-        }
+                function h2p() {
+                    var e = document.getElementById('cert');
+                    var o = { margin: 10, filename: 'Cert.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
+                    document.getElementById('dBtn').style.display = 'none';
+                    html2pdf().set(o).from(e).save().then(function () { document.getElementById('dBtn').style.display = 'block'; });
+                }
             </script>
     </body>
 
