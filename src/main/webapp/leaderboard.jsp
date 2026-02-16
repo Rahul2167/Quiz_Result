@@ -78,15 +78,19 @@
             <h2>🏆 Leaderboard</h2>
 
             <% String errorMsg=null; Connection con=null; Statement stmt=null; ResultSet rs=null; try { String
-                bucketUrl=System.getenv("DB_URL"); String host=System.getenv("DB_HOST"); String
-                dbName=System.getenv("DB_NAME"); String user=System.getenv("DB_USER"); String
-                password=System.getenv("DB_PASSWORD"); String url; if (host !=null && dbName !=null) {
-                url="jdbc:postgresql://" + host + ":5432/" + dbName; } else if (bucketUrl !=null) { url=bucketUrl; }
-                else { url="jdbc:postgresql://localhost:5432/student" ; } if (user==null) user="postgres" ; if
-                (password==null) password="Rahul@2167" ; Class.forName("org.postgresql.Driver");
-                con=DriverManager.getConnection(url, user, password); String
-                sql="SELECT * FROM quiz_result ORDER BY score DESC, quiz_date ASC" ; stmt=con.createStatement();
-                rs=stmt.executeQuery(sql); } catch(Exception e) { errorMsg=e.getMessage(); e.printStackTrace(); } %>
+                bucketUrl=System.getenv("DB_URL"); if (bucketUrl==null) bucketUrl=System.getenv("URL"); if
+                (bucketUrl==null) bucketUrl=System.getenv("DATABASE_URL"); String host=System.getenv("DB_HOST"); String
+                port=System.getenv("DB_PORT"); if (port==null) port="5432" ; String dbName=System.getenv("DB_NAME");
+                String user=System.getenv("DB_USER"); String password=System.getenv("DB_PASSWORD"); String url; if (host
+                !=null && dbName !=null) { url="jdbc:postgresql://" + host + ":" + port + "/" + dbName
+                + "?sslmode=require" ; } else if (bucketUrl !=null) { url=bucketUrl; if (url.startsWith("postgres://"))
+                { url="jdbc:postgresql" + url.substring(8); } if (!url.contains("?")) { url +="?sslmode=require" ; }
+                else if (!url.contains("sslmode")) { url +="&sslmode=require" ; } } else {
+                url="jdbc:postgresql://localhost:5432/student" ; } if (user==null) user="postgres" ; if (password==null)
+                password="Rahul@2167" ; Class.forName("org.postgresql.Driver"); con=DriverManager.getConnection(url,
+                user, password); String sql="SELECT * FROM quiz_result ORDER BY score DESC, quiz_date ASC" ;
+                stmt=con.createStatement(); rs=stmt.executeQuery(sql); } catch(Exception e) { errorMsg=e.getMessage();
+                e.printStackTrace(); } %>
 
                 <% if (errorMsg !=null) { %>
                     <div
