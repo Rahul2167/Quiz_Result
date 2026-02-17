@@ -10,7 +10,18 @@ click to check the website :--  https://online-quiz-i2p3.onrender.com
 
 # Online Quiz Application (JSP)
 
-A web-based quiz system built with JSP, allowing users to test their knowledge across 10 multiple-choice questions. The application features a countdown timer per question, instant visual feedback on answers, session tracking, score calculation, and a leaderboard to compare results.
+## Table of Contents
+- [Online Quiz Application (JSP)](#online-quiz-application-jsp)
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Prerequisites](#prerequisites)
+- [Project Structure](#project-structure)
+- [How to Use](#how-to-use)
+- [Known Issues / Limitations](#known-issues--limitations)
+- [Future Enhancements](#future-enhancements)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
 
 ---
 
@@ -114,13 +125,12 @@ This project is for educational purposes. You may use and modify it as needed.
 
 ---
 
-Contact
+## Contact
+
 For questions, suggestions, or issues, please contact:
 
-Project Maintainer: [rahulpotdar2167@gmail.com]
+Project Maintainer: [rahulpotdar2167@gmail.com]  
 GitHub Issues: [https://github.com/Rahul2167/smart_rd_system_project/issues]
 
 **Happy Quizzing!** 🧠
-
-
 
