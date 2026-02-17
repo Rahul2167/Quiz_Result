@@ -57,21 +57,20 @@ click to check the website :--  https://online-quiz-i2p3.onrender.com
 ---
 
 ## Project Structure
-
-├── index.html               # Landing page – enter your name
-├── quiz1.jsp                # Question 1 (capital of India)
-├── quiz2.jsp                # Question 2 (Father of the Nation)
-├── quiz3.jsp                # Question 3 (largest planet)
-├── quiz4.jsp                # Question 4 (inventor of telephone)
-├── quiz5.jsp                # Question 5 (longest river)
-├── quiz6.jsp                # Question 6 (Pravasi Bhartiya Divas year)
-├── quiz7.jsp                # Question 7 (Vijay Singh's country)
-├── quiz8.jsp                # Question 8 (DRDL full form)
-├── quiz9.jsp                # Question 9 (green planet)
-├── quiz10.jsp               # Question 10 (father of Indian missiles)
-├── result.jsp               # Final score, answer review, DB insert
-├── leaderboard.jsp          # Shows ranked results from DB
-└── certificate.jsp          # (Placeholder) PDF certificate download
+├── index.html # Landing page – enter your name
+├── quiz1.jsp # Question 1 (capital of India)
+├── quiz2.jsp # Question 2 (Father of the Nation)
+├── quiz3.jsp # Question 3 (largest planet)
+├── quiz4.jsp # Question 4 (inventor of telephone)
+├── quiz5.jsp # Question 5 (longest river)
+├── quiz6.jsp # Question 6 (Pravasi Bharatiya Divas year)
+├── quiz7.jsp # Question 7 (Vijay Singh's country)
+├── quiz8.jsp # Question 8 (DRDL full form)
+├── quiz9.jsp # Question 9 (green planet)
+├── quiz10.jsp # Question 10 (father of Indian missiles)
+├── result.jsp # Final score, answer review, DB insert
+├── leaderboard.jsp # Shows ranked results from DB
+└── certificate.jsp # (Placeholder) PDF certificate download
 
 ## How to Use
 
