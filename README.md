@@ -6,7 +6,10 @@ click to check the website :--  https://online-quiz-i2p3.onrender.com
 <img width="1895" height="1010" alt="image" src="https://github.com/user-attachments/assets/77104327-e51e-45d4-b390-a9d6f8d311ac" />
 <img width="1899" height="1014" alt="image" src="https://github.com/user-attachments/assets/3ccd1b4b-53ef-4e2a-b7d3-c821cc36f603" />
 <img width="1911" height="1022" alt="image" src="https://github.com/user-attachments/assets/c879a03a-8edd-44c9-a347-ddbe4e7bfe28" />
+<img width="1919" height="1023" alt="image" src="https://github.com/user-attachments/assets/d46b1cb3-65af-4a7d-b3e2-68bd83e52c35" />
 <img width="1900" height="1020" alt="image" src="https://github.com/user-attachments/assets/478ccb01-ab12-4f8e-ba08-3759e96ce36c" />
+<img width="1919" height="1017" alt="image" src="https://github.com/user-attachments/assets/7788f3e0-dcd0-4a51-93d2-b4a2cca826af" />
+
 
 # Online Quiz Application (JSP)
 
