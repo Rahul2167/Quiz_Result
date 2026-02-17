@@ -114,6 +114,12 @@ This project is for educational purposes. You may use and modify it as needed.
 
 ---
 
+Contact
+For questions, suggestions, or issues, please contact:
+
+Project Maintainer: [rahulpotdar2167@gmail.com]
+GitHub Issues: [https://github.com/Rahul2167/smart_rd_system_project/issues]
+
 **Happy Quizzing!** 🧠
 
 
