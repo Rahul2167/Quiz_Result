@@ -58,9 +58,8 @@ click to check the website :--  https://online-quiz-i2p3.onrender.com
 
 ## Project Structure
 
------------------
-├── index.html               # Landing page – enter your name
-├── quiz1.jsp                # Question 1 (capital of India)
+├── index.html               # Landing page – enter your name                                                                                             .
+├── quiz1.jsp                # Question 1 (capital of India)                                                                                              .
 ├── quiz2.jsp                # Question 2 (Father of the Nation)
 ├── quiz3.jsp                # Question 3 (largest planet)
 ├── quiz4.jsp                # Question 4 (inventor of telephone)
