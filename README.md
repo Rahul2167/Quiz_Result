@@ -104,7 +104,7 @@ click to check the website :--  https://online-quiz-i2p3.onrender.com
 
 ## Future Enhancements
 
-- Replace hardcoded DB credentials with JNDI or a configuration file.
+- Replace hardcoded DB credentials with a configuration file.
 - Implement proper PDF certificate generation.
 - Add user authentication and track multiple attempts per user.
 - Improve timer synchronisation and visual feedback.
