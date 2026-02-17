@@ -13,6 +13,10 @@ click to check the website :--  https://online-quiz-i2p3.onrender.com
 
 # Online Quiz Application (JSP)
 
+A web-based quiz system built with JSP, allowing users to test their knowledge across 10 multiple-choice questions. The application features a countdown timer per question, instant visual feedback on answers, session tracking, score calculation, and a leaderboard to compare results.
+
+---
+
 ## Table of Contents
 - [Online Quiz Application (JSP)](#online-quiz-application-jsp)
 - [Features](#features)
