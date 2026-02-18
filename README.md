@@ -99,16 +99,6 @@ A web-based quiz system built with JSP, allowing users to test their knowledge a
 
 ---
 
-## Known Issues / Limitations
-
-- The certificate download does **not** generate a real PDF; it merely sends HTML with a PDF content type. A proper PDF generation library (e.g., iText) is needed.
-- Database credentials are hardcoded – not secure for production.
-- The welcome message in `result.jsp` tries to read `fullname` from the request, which may be null (the name is actually retrieved from session correctly later).
-- Timer continues even after the user has answered (visual blink may be interrupted if the timer triggers a submit). The current implementation disables the default form submission and submits after the blink, but the timer still runs and could submit early if not carefully synchronised.
-- No input validation or SQL injection protection (though using `PreparedStatement` helps).
-
----
-
 ## Future Enhancements
 
 - Replace hardcoded DB credentials with a configuration file.
